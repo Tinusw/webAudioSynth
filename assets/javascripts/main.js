@@ -12,8 +12,8 @@ var playNote = function(frequency, startTime, duration){
   volume.gain.value = 0.8;
 
   // Set Oscillator shapes
-  osc1.type = 'ramp';
-  osc2.type = 'ramp';
+  osc1.type = 'triange';
+  osc2.type = 'triangle';
 
   // set up nodes so we route osc through volume
   osc1.connect(volume);
@@ -37,9 +37,12 @@ var playNote = function(frequency, startTime, duration){
   osc2.stop(startTime + duration);
 };
 
-playNote(493.883, context.currentTime, 1.200);
-
-playNote(659.255, context.currentTime + 0.300, 1.200);
-
-playNote(987.77, context.currentTime + 0.650, 1.200);
-
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById("click").addEventListener('click', function(){
+    playNote(493.883, context.currentTime, 1.000);
+    playNote(659.255, context.currentTime + 0.300, 1.000);
+    playNote(987.77, context.currentTime + 0.650, 1.000);
+    playNote(880.00, context.currentTime + 1.000, 1.000);
+    playNote(830.61, context.currentTime + 1.500, 1.000);
+  });
+});
