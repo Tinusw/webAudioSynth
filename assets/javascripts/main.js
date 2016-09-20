@@ -30,6 +30,10 @@ volume.connect(context.destination);
 var duration = 2;
 var startTime = context.currentTime;
 
+// Fade Out Effect
+volume.gain.setValueAtTime(0.1, startTime + duration - 0.05);
+volume.gain.linearRampToValueAtTime(0, startTime + duration);
+
 // Start the Oscillator now
 osc1.start(startTime);
 osc2.start(startTime);
