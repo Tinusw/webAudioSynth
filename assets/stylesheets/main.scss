@@ -1,0 +1,16 @@
+button {
+    height: 100px;
+    width: 35px;
+    margin: 0px;
+    margin-right: 0;
+    margin-left: 0;
+    p {
+      visibility: hidden;
+    }
+    &:hover{
+      p{
+        visibility: inherit;
+      }
+    }
+}
+

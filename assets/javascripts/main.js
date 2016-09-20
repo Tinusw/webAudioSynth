@@ -12,8 +12,8 @@ var playNote = function(frequency, startTime, duration){
   volume.gain.value = 0.8;
 
   // Set Oscillator shapes
-  osc1.type = 'triange';
-  osc2.type = 'triangle';
+  osc1.type = 'sawtooth';
+  osc2.type = 'sawtooth';
 
   // set up nodes so we route osc through volume
   osc1.connect(volume);
@@ -45,4 +45,47 @@ document.addEventListener('DOMContentLoaded', function() {
     playNote(880.00, context.currentTime + 1.000, 1.000);
     playNote(830.61, context.currentTime + 1.500, 1.000);
   });
+
+  document.getElementById("A").addEventListener('click', function(){
+    playNote(440, context.currentTime, 1.000);
+  });
+
+  document.getElementById("A#").addEventListener('click', function(){
+    playNote(466.16, context.currentTime, 1.000);
+  });
+
+  document.getElementById("B").addEventListener('click', function(){
+    playNote(493.88, context.currentTime, 1.000);
+  });
+
+  document.getElementById("C").addEventListener('click', function(){
+    playNote(523.25, context.currentTime, 1.000);
+  });
+
+  document.getElementById("C#").addEventListener('click', function(){
+    playNote(554.37, context.currentTime, 1.000);
+  });
+
+  document.getElementById("D").addEventListener('click', function(){
+      playNote(587.33, context.currentTime, 1.000);
+    });
+  document.getElementById("D#").addEventListener('click', function(){
+      playNote(622.25, context.currentTime, 1.000);
+    });
+  document.getElementById("E").addEventListener('click', function(){
+      playNote(659.25, context.currentTime, 1.000);
+    });
+  document.getElementById("F").addEventListener('click', function(){
+      playNote(698.46, context.currentTime, 1.000);
+    });
+  document.getElementById("F#").addEventListener('click', function(){
+      playNote(739.99, context.currentTime, 1.000);
+    });
+  document.getElementById("G").addEventListener('click', function(){
+      playNote(783.99, context.currentTime, 1.000);
+    });
+  document.getElementById("G#").addEventListener('click', function(){
+      playNote(830.61, context.currentTime, 1.000);
+    });
+
 });

@@ -4,7 +4,6 @@ button {
   margin: 0px;
   margin-right: 0;
   margin-left: 0; }
-  button p {
-    visibility: hidden; }
-  button:hover p {
-    visibility: inherit; }
+
+button .p {
+  display: none; }
