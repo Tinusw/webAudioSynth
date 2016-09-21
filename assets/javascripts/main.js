@@ -1,5 +1,11 @@
 var context = new AudioContext();
 
+// Create audio Analyser
+var analyser = context.createAnalyser();
+// Now we need to capture the data
+analyser.fftSize = 2048;
+var bufferLength = analyser.frequencyBinCount;
+var dataArray = new Uint8Array(bufferLength);
 
 // Play OSC at certain frequency and for a certain time
 var playNote = function(frequency, startTime, duration){
@@ -7,6 +13,9 @@ var playNote = function(frequency, startTime, duration){
   var osc1 = context.createOscillator();
   var osc2 = context.createOscillator();
   var amp = context.createGain();
+
+  // default Amp level
+  amp.gain.value = 0.2;
 
   // Create a basic LP filter
   var filter = context.createBiquadFilter();
@@ -24,6 +33,9 @@ var playNote = function(frequency, startTime, duration){
 
   filter.connect(amp);
   amp.connect(context.destination);
+  // and to analyser
+  amp.connect(analyser)
+  analyser.getByteTimeDomainData(dataArray);
 
   // Alter frequency for each OSC independently, chorus effect
   osc1.frequency.value = frequency + 1;
@@ -31,11 +43,11 @@ var playNote = function(frequency, startTime, duration){
 
   // Volume scaled to 8/10ths of total gain
   document.getElementById('volume').addEventListener('change', function() {
-    volume.gain.value = this.value;
+    amp.gain.value = this.value;
+    // Fade out
+    amp.gain.setValueAtTime(this.value, startTime + duration - 0.800);
+    amp.gain.linearRampToValueAtTime(0.0, startTime + duration);
   });
-  // Fade out
-  // volume.gain.setValueAtTime(0.4, startTime + duration - 0.800);
-  // volume.gain.linearRampToValueAtTime(0.0, startTime + duration);
 
   // Start the Oscillator now
   osc1.start(startTime);
