@@ -11,8 +11,10 @@
   <body>
     <div class="col-lg-12">
       <h1 class="text-center"> Web Synth V1 </h1>
-      <button id="click">click me</button>
-      <div class="keyboard col-lg-offset-4 col-lg-12">
+      <div class="controls col-lg-offset-3 col-lg-6">
+        <input id="volume" type="range" min="0" max="1" step="0.1" value="0.5"/>
+      </div>
+      <div class="keyboard col-lg-offset-4 col-lg-6">
         <button id="A"><p>A</p></button>
         <button id="A#"><p>A#</p></button>
         <button id="B"><p>B</p></button>
@@ -25,6 +27,9 @@
         <button id="F#"><p>F#</p></button>
         <button id="G"><p>G</p></button>
         <button id="G#"><p>G#</p></button>
+      </div>
+      <div class="melodies text-center col-lg-offset-3 col-lg-6">
+        <button id="click">click me</button>
       </div>
     </div>
 

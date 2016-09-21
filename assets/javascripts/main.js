@@ -6,16 +6,13 @@ var playNote = function(frequency, startTime, duration){
   // Create OSC & volume
   var osc1 = context.createOscillator();
   var osc2 = context.createOscillator();
-  var volume = context.createGain();
+  var amp = context.createGain();
 
   // Create a basic LP filter
   var filter = context.createBiquadFilter();
   filter.type = 0;
   filter.frequency.value = 2000;
   filter.Q.value = 0;
-
-  // Volume scaled to 8/10ths of total gain
-  volume.gain.value = 0.4;
 
   // Set Oscillator shapes
   osc1.type = 'sawtooth';
@@ -25,16 +22,20 @@ var playNote = function(frequency, startTime, duration){
   osc1.connect(filter);
   osc2.connect(filter);
 
-  filter.connect(volume);
-  volume.connect(context.destination);
+  filter.connect(amp);
+  amp.connect(context.destination);
 
   // Alter frequency for each OSC independently, chorus effect
   osc1.frequency.value = frequency + 1;
   osc2.frequency.value = frequency - 2;
 
+  // Volume scaled to 8/10ths of total gain
+  document.getElementById('volume').addEventListener('change', function() {
+    volume.gain.value = this.value;
+  });
   // Fade out
-  volume.gain.setValueAtTime(0.4, startTime + duration - 0.800);
-  volume.gain.linearRampToValueAtTime(0.0, startTime + duration);
+  // volume.gain.setValueAtTime(0.4, startTime + duration - 0.800);
+  // volume.gain.linearRampToValueAtTime(0.0, startTime + duration);
 
   // Start the Oscillator now
   osc1.start(startTime);
