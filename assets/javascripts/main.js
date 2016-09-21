@@ -8,16 +8,24 @@ var playNote = function(frequency, startTime, duration){
   var osc2 = context.createOscillator();
   var volume = context.createGain();
 
+  // Create a basic LP filter
+  var filter = context.createBiquadFilter();
+  filter.type = 0;
+  filter.frequency.value = 2000;
+  filter.Q.value = 0;
+
   // Volume scaled to 8/10ths of total gain
-  volume.gain.value = 0.8;
+  volume.gain.value = 0.4;
 
   // Set Oscillator shapes
   osc1.type = 'sawtooth';
   osc2.type = 'sawtooth';
 
   // set up nodes so we route osc through volume
-  osc1.connect(volume);
-  osc2.connect(volume);
+  osc1.connect(filter);
+  osc2.connect(filter);
+
+  filter.connect(volume);
   volume.connect(context.destination);
 
   // Alter frequency for each OSC independently, chorus effect
@@ -26,7 +34,7 @@ var playNote = function(frequency, startTime, duration){
 
   // Fade out
   volume.gain.setValueAtTime(0.4, startTime + duration - 0.800);
-  volume.gain.linearRampToValueAtTime(0, startTime + duration);
+  volume.gain.linearRampToValueAtTime(0.0, startTime + duration);
 
   // Start the Oscillator now
   osc1.start(startTime);
@@ -69,23 +77,28 @@ document.addEventListener('DOMContentLoaded', function() {
   document.getElementById("D").addEventListener('click', function(){
       playNote(587.33, context.currentTime, 1.000);
     });
+
   document.getElementById("D#").addEventListener('click', function(){
       playNote(622.25, context.currentTime, 1.000);
     });
+
   document.getElementById("E").addEventListener('click', function(){
       playNote(659.25, context.currentTime, 1.000);
     });
+
   document.getElementById("F").addEventListener('click', function(){
       playNote(698.46, context.currentTime, 1.000);
     });
+
   document.getElementById("F#").addEventListener('click', function(){
       playNote(739.99, context.currentTime, 1.000);
     });
+
   document.getElementById("G").addEventListener('click', function(){
       playNote(783.99, context.currentTime, 1.000);
     });
+
   document.getElementById("G#").addEventListener('click', function(){
       playNote(830.61, context.currentTime, 1.000);
     });
-
 });
