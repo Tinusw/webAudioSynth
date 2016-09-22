@@ -1,0 +1,1 @@
+var analyser=audioContext.createAnalyser();

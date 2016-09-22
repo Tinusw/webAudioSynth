@@ -7,6 +7,30 @@ analyser.fftSize = 2048;
 var bufferLength = analyser.frequencyBinCount;
 var dataArray = new Uint8Array(bufferLength);
 
+var STATE = {
+  volume: 0.8,
+  melody: function() {}
+}
+
+function changeVolume(volume) {
+  STATE.volume = volume
+}
+
+function applyVolumeToAmp(amp, startTime, duration) {
+  amp.gain.value = STATE.volume;
+  // Fade out
+  amp.gain.setValueAtTime(STATE.volume, startTime + duration - 0.800);
+  amp.gain.linearRampToValueAtTime(0.0, startTime + duration);  
+}
+
+function setupVolumeListener(amp, startTime, duration) {
+  //TODO: remove the old listeners before addin this one
+  document.getElementById('volume').addEventListener('change', function() {
+    changeVolume(this.value)
+    applyVolumeToAmp(amp, startTime, duration)
+  })
+}
+
 // Play OSC at certain frequency and for a certain time
 var playNote = function(frequency, startTime, duration){
   // Create OSC & volume
@@ -20,7 +44,7 @@ var playNote = function(frequency, startTime, duration){
   // Create a basic LP filter
   var filter = context.createBiquadFilter();
   filter.type = 0;
-  filter.frequency.value = 2000;
+  filter.frequency.value = 500;
   filter.Q.value = 0;
 
   // Set Oscillator shapes
@@ -41,13 +65,9 @@ var playNote = function(frequency, startTime, duration){
   osc1.frequency.value = frequency + 1;
   osc2.frequency.value = frequency - 2;
 
-  // Volume scaled to 8/10ths of total gain
-  document.getElementById('volume').addEventListener('change', function() {
-    amp.gain.value = this.value;
-    // Fade out
-    amp.gain.setValueAtTime(this.value, startTime + duration - 0.800);
-    amp.gain.linearRampToValueAtTime(0.0, startTime + duration);
-  });
+  applyVolumeToAmp(amp, startTime, duration)
+  setupVolumeListener(amp, startTime, duration)
+  
 
   // Start the Oscillator now
   osc1.start(startTime);
