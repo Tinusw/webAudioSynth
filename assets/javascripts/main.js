@@ -18,22 +18,38 @@ window.AudioContext = window.AudioContext || window.webkitAudioContext;
   masterGain = context.createGain();
   nodes = [];
 
+  var filter = context.createBiquadFilter();
+  filter.type = filter.LOWPASS;
+  var filter2 = context.createBiquadFilter();
+  filter.type = filter.HIGHPASS;
+
 
   masterGain.connect(context.destination);
   
   // State that will save global variables and levels
   var STATE = {
-    volume: 0.8,
-    melody: function() {}
+    volume: 0.5,
+    LPcutoff : 5000,
+    HPcutoff : 5000
   }
 
   // Initial State
+  filter.frequency.value = STATE.LPcutoff;
+  filter2.frequency.value = STATE.HPcutoff;
   masterGain.gain.value = STATE.volume;
   console.log(masterGain.gain.value);
 
   // Function to alter Master Volume
-  function changeMasterVolume(volume) {
+  function changeMasterVolume(volume){
     STATE.volume = volume;
+  }
+
+  function changeLPcutoff(LPcutoff){
+    STATE.LPcutoff = LPcutoff;
+  }
+
+  function changeHPcutoff(HPcutoff){
+    STATE.HPcutoff = HPcutoff;
   }
   
   // Listener for MasterVolume
@@ -42,6 +58,24 @@ window.AudioContext = window.AudioContext || window.webkitAudioContext;
   MasterVolume.addEventListener("change", function(){
     changeMasterVolume(this.value);
     masterGain.gain.value = this.value;
+
+  });
+
+  // Listener for LOWPASS FILTER CUTOFF
+  var LPcutoff = document.getElementById("LPcutoff");
+
+  LPcutoff.addEventListener("change", function(){
+    changeLPcutoff(this.value);
+    filter.frequency.value = this.value;
+
+  });
+
+  // Listener for HIGHPASS FILTER CUTOFF
+  var LPcutoff = document.getElementById("HPcutoff");
+
+  LPcutoff.addEventListener("change", function(){
+    changeHPcutoff(this.value);
+    filter2.frequency.value = this.value;
 
   });
 
@@ -54,17 +88,21 @@ window.AudioContext = window.AudioContext || window.webkitAudioContext;
       oscillator.type = 'sawtooth';
       oscillator.frequency.value = frequency;
       oscillator.detune.value = -10;
-      oscillator.connect(masterGain);
       oscillator.start(context.currentTime);
 
       var oscillator2 = context.createOscillator();
       oscillator2.type = 'sawtooth';
       oscillator2.frequency.value = frequency;
       oscillator2.detune.value = 10;
-      oscillator2.connect(masterGain);
       oscillator2.start(context.currentTime);
 
       oscillators[frequency] = [oscillator, oscillator2];
+
+      oscillator.connect(filter);
+      oscillator2.connect(filter);
+      filter.connect(filter2);
+      filter2.connect(masterGain);
+
 
   };
 
