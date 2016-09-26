@@ -18,43 +18,66 @@ window.AudioContext = window.AudioContext || window.webkitAudioContext;
   masterGain = context.createGain();
   nodes = [];
 
-  masterGain.gain.value = 0.3;
-  masterGain.connect(context.destination); 
+
+  masterGain.connect(context.destination);
+  
+  // State that will save global variables and levels
+  var STATE = {
+    volume: 0.8,
+    melody: function() {}
+  }
+
+  // Initial State
+  masterGain.gain.value = STATE.volume;
+  console.log(masterGain.gain.value);
+
+  // Function to alter Master Volume
+  function changeMasterVolume(volume) {
+    STATE.volume = volume;
+  }
+  
+  // Listener for MasterVolume
+  var MasterVolume = document.getElementById("volume");
+
+  MasterVolume.addEventListener("change", function(){
+    changeMasterVolume(this.value);
+    masterGain.gain.value = this.value;
+
+  });
+
+  var oscillators = {};
 
   // Keydown Event
   keyboard.keyDown = function (note, frequency) {
+      // create our two oscilators
       var oscillator = context.createOscillator();
-      oscillator.type = 'square';
+      oscillator.type = 'sawtooth';
       oscillator.frequency.value = frequency;
+      oscillator.detune.value = -10;
       oscillator.connect(masterGain);
-      oscillator.start(0);
+      oscillator.start(context.currentTime);
 
-      nodes.push(oscillator);
+      var oscillator2 = context.createOscillator();
+      oscillator2.type = 'sawtooth';
+      oscillator2.frequency.value = frequency;
+      oscillator2.detune.value = 10;
+      oscillator2.connect(masterGain);
+      oscillator2.start(context.currentTime);
+
+      oscillators[frequency] = [oscillator, oscillator2];
+
   };
 
   // KeyUp or stop note event
   keyboard.keyUp = function (note, frequency) {
-      var new_nodes = [];
-
-      for (var i = 0; i < nodes.length; i++) {
-          if (Math.round(nodes[i].frequency.value) === Math.round(frequency)) {
-              nodes[i].stop(0);
-              nodes[i].disconnect();
-          } else {
-              new_nodes.push(nodes[i]);
-          }
-      }
-
-      nodes = new_nodes;
+      oscillators[frequency].forEach(function(oscillator){
+        oscillator.stop(context.currentTime)
+      });
   };
 ;
 
 
 
-// var STATE = {
-//   volume: 0.8,
-//   melody: function() {}
-// }
 
 // function changeVolume(volume) {
 //   STATE.volume = volume
