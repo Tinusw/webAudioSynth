@@ -11,17 +11,21 @@
   <body>
     <div class="col-lg-12">
       <h1 class="text-center"> Web Synth V1 </h1>
-      <div class="controls col-lg-offset-3 col-lg-6">
-        <label>Master Volume</label>
-        <input id="volume" type="range" min="0" max="1" step="0.1" value="0.5"/>
+      
+      <div class="col-lg-offset-3 col-lg-6">
+        <canvas id="canvas" width="750px" height="256"></canvas>
+        <div class="controls">
+          <label>Master Volume</label>
+          <input id="volume" type="range" min="0" max="1" step="0.1" value="0.5"/>
 
-        <label>LP Filter</label>
-        <input id="LPcutoff" type="range" min="0" max="5000" step="0.1" value="5000"/>
+          <label>LP Filter</label>
+          <input id="LPcutoff" type="range" min="0" max="10000" step="0.1" value="10000"/>
 
-        <label>HP Filter</label>
-        <input id="HPcutoff" type="range" min="0" max="5000" step="0.1" value="5000"/>
+          <label>HP Filter</label>
+          <input id="HPcutoff" type="range" min="0" max="10000" step="0.1" value="0"/>
 
 
+        </div>
       </div>
       <div class="col-lg-offset-4 col-lg-6">
         <div id="keyboard"></div>

@@ -18,26 +18,31 @@ window.AudioContext = window.AudioContext || window.webkitAudioContext;
   masterGain = context.createGain();
   nodes = [];
 
+  // init LP and HP filters
   var filter = context.createBiquadFilter();
-  filter.type = filter.LOWPASS;
+  filter.type = "lowpass";
   var filter2 = context.createBiquadFilter();
-  filter.type = filter.HIGHPASS;
+  filter2.type = "highpass";
 
-
-  masterGain.connect(context.destination);
+  // Create our analyser
+  var analyser = context.createAnalyser();
+  analyser.smoothingTimeConstant = 0.3;
+  analyser.fftSize = 1024;
+  // Don't know why visualiser needs this var
+  var ctx;
+  var fbc_array, bars, bar_x, bar_width, bar_height;
   
   // State that will save global variables and levels
   var STATE = {
     volume: 0.5,
-    LPcutoff : 5000,
-    HPcutoff : 5000
+    LPcutoff : 10000,
+    HPcutoff : 0
   }
 
   // Initial State
   filter.frequency.value = STATE.LPcutoff;
   filter2.frequency.value = STATE.HPcutoff;
   masterGain.gain.value = STATE.volume;
-  console.log(masterGain.gain.value);
 
   // Function to alter Master Volume
   function changeMasterVolume(volume){
@@ -79,6 +84,23 @@ window.AudioContext = window.AudioContext || window.webkitAudioContext;
 
   });
 
+  function frameLooper(){
+    window.webkitRequestAnimationFrame(frameLooper);
+    // varialbes that our analyser will use
+    fbc_array = new Uint8Array(analyser.frequencyBinCount);
+    analyser.getByteFrequencyData(fbc_array);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#00CCFF';
+    bars = 250;
+    // Loop that build spectrum
+    for (var i = 0; i < bars; i++) {
+      bar_x = i * 3;
+      bar_width = 2;
+      bar_height = -(fbc_array[i] / 2);
+      ctx.fillRect(bar_x, canvas.height, bar_width, bar_height);
+    }
+  }
+
   var oscillators = {};
 
   // Keydown Event
@@ -101,9 +123,15 @@ window.AudioContext = window.AudioContext || window.webkitAudioContext;
       oscillator.connect(filter);
       oscillator2.connect(filter);
       filter.connect(filter2);
-      filter2.connect(masterGain);
+      // Visualiser stuff
+      var canvas = document.getElementById("canvas");
+      ctx = canvas.getContext('2d');
+      // And connect Signal Path
+      filter2.connect(analyser);
+      analyser.connect(masterGain);
+      masterGain.connect(context.destination);
 
-
+      frameLooper();
   };
 
   // KeyUp or stop note event
