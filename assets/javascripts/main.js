@@ -10,8 +10,8 @@ window.AudioContext = window.AudioContext || window.webkitAudioContext;
           whiteNotesColour: '#fff',
           blackNotesColour: '#000',
           borderColour: '#000',
-          activeColour: 'yellow',
-          octaves: 2
+          activeColour: 'orange',
+          octaves: 3
       },
       keyboard = new QwertyHancock(settings);
 
@@ -86,9 +86,13 @@ window.AudioContext = window.AudioContext || window.webkitAudioContext;
 
   function frameLooper(){
     window.webkitRequestAnimationFrame(frameLooper);
+    // Visualiser stuff
+    var canvas = document.getElementById("canvas");
+    ctx = canvas.getContext('2d');
     // varialbes that our analyser will use
     fbc_array = new Uint8Array(analyser.frequencyBinCount);
     analyser.getByteFrequencyData(fbc_array);
+    ctx.beginPath();
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = '#00CCFF';
     bars = 250;
@@ -99,6 +103,7 @@ window.AudioContext = window.AudioContext || window.webkitAudioContext;
       bar_height = -(fbc_array[i] / 2);
       ctx.fillRect(bar_x, canvas.height, bar_width, bar_height);
     }
+    ctx.closePath();
   }
 
   var oscillators = {};
@@ -123,9 +128,7 @@ window.AudioContext = window.AudioContext || window.webkitAudioContext;
       oscillator.connect(filter);
       oscillator2.connect(filter);
       filter.connect(filter2);
-      // Visualiser stuff
-      var canvas = document.getElementById("canvas");
-      ctx = canvas.getContext('2d');
+      
       // And connect Signal Path
       filter2.connect(analyser);
       analyser.connect(masterGain);
