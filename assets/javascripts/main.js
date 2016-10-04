@@ -1,10 +1,15 @@
+function outputUpdate(vol) {
+  document.querySelector('#MasterVolumeOutput').value = vol * 100 + "%";
+}
+
+
 // Browser Compatibility
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
 
   var context = new AudioContext(),
       settings = {
           id: 'keyboard',
-          width: 600,
+          width: 630,
           height: 150,
           startNote: 'A2',
           whiteNotesColour: '#fff',
