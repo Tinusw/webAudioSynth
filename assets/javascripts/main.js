@@ -1,20 +1,3 @@
-// A little helper funcion to handle our SVG and D3
-$(document).ready(function(){
-  // Create our analyser and vars
-  var svgHeight = 100;
-  var svgWidth = 600;
-  var barPadding = 1;
-
-  function createSvg(parent, height, width){
-    return d3.select(parent)
-      .append('svg')
-      .attr('height', height)
-      .attr('width', width)
-  }
-
-  var graph = createSvg('#canvas', svgHeight, svgWidth);
-});
-
 function outputUpdate(vol) {
   document.querySelector('#MasterVolumeOutput').value = vol * 100 + "%";
 }
@@ -100,29 +83,45 @@ window.AudioContext = window.AudioContext || window.webkitAudioContext;
 
   });
 
-  function frameLooper(){
-    window.webkitRequestAnimationFrame(frameLooper);
-    // Visualiser stuff
-    var canvas = document.getElementById("canvas");
-    ctx = canvas.getContext('2d');
-    // varialbes that our analyser will use
-    fbc_array = new Uint8Array(analyser.frequencyBinCount);
-    analyser.getByteFrequencyData(fbc_array);
-    ctx.beginPath();
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = '#000';
-    bars = 250;
-    // Loop that builds the spectrum
-    for (var i = 0; i < bars; i++) {
-      bar_x = i * 4;
-      bar_width = 2;
-      bar_height = -(fbc_array[i] / 2);
-      ctx.fillRect(bar_x, canvas.height, bar_width, bar_height);
-    }
-    ctx.closePath();
+  // visuals
+  var frequencyData = new Uint8Array(200);
+  // Create our analyser and vars
+  var svgHeight = 300;
+  var svgWidth = 600;
+  var barPadding = 1;
+
+  function createSvg(parent, height, width){
+    return d3.select(parent).append('svg').attr('height', height).attr('width', width)
   }
 
+  var svg = createSvg('#canvas', svgHeight, svgWidth);
+
+  svg.selectAll('rect').data(frequencyData).enter().append('rect').attr('x', function(d, i){
+    return i * (svgWidth / frequencyData.length);
+  })
+  .attr('width',svgWidth / frequencyData.length - barPadding);
+
   var oscillators = {};
+
+  // loop and update chart with frequency data
+  function renderChart() {
+    requestAnimationFrame(renderChart);
+
+    // copy freq data to freqData array
+    analyser.getByteFrequencyData(frequencyData);
+
+    // Update d3 chart with data
+    svg.selectAll('rect').data(frequencyData)
+      .attr('y', function(d) {
+        return svgHeight -d;
+      })
+      .attr('height', function(d) {
+        return d;
+      })
+      .attr('fill', function(d) {
+        return 'rgb(0,0,'+ d +' )';
+      });
+  }
 
   // Keydown Event
   keyboard.keyDown = function (note, frequency) {
@@ -150,7 +149,7 @@ window.AudioContext = window.AudioContext || window.webkitAudioContext;
       analyser.connect(masterGain);
       masterGain.connect(context.destination);
 
-      frameLooper();
+      renderChart();
   };
 
   // KeyUp or stop note event
