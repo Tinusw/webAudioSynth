@@ -1,3 +1,20 @@
+// A little helper funcion to handle our SVG and D3
+$(document).ready(function(){
+  // Create our analyser and vars
+  var svgHeight = 100;
+  var svgWidth = 600;
+  var barPadding = 1;
+
+  function createSvg(parent, height, width){
+    return d3.select(parent)
+      .append('svg')
+      .attr('height', height)
+      .attr('width', width)
+  }
+
+  var graph = createSvg('#canvas', svgHeight, svgWidth);
+});
+
 function outputUpdate(vol) {
   document.querySelector('#MasterVolumeOutput').value = vol * 100 + "%";
 }
@@ -28,14 +45,6 @@ window.AudioContext = window.AudioContext || window.webkitAudioContext;
   filter.type = "lowpass";
   var filter2 = context.createBiquadFilter();
   filter2.type = "highpass";
-
-  // Create our analyser
-  var analyser = context.createAnalyser();
-  analyser.smoothingTimeConstant = 0.3;
-  analyser.fftSize = 1024;
-  // Don't know why visualiser needs this var
-  var ctx;
-  var fbc_array, bars, bar_x, bar_width, bar_height;
   
   // State that will save global variables and levels
   var STATE = {
@@ -71,6 +80,8 @@ window.AudioContext = window.AudioContext || window.webkitAudioContext;
 
   });
 
+  var analyser = context.createAnalyser();
+
   // Listener for LOWPASS FILTER CUTOFF
   var LPcutoff = document.getElementById("LPcutoff");
 
@@ -99,11 +110,11 @@ window.AudioContext = window.AudioContext || window.webkitAudioContext;
     analyser.getByteFrequencyData(fbc_array);
     ctx.beginPath();
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = '#00CCFF';
+    ctx.fillStyle = '#000';
     bars = 250;
-    // Loop that build spectrum
+    // Loop that builds the spectrum
     for (var i = 0; i < bars; i++) {
-      bar_x = i * 3;
+      bar_x = i * 4;
       bar_width = 2;
       bar_height = -(fbc_array[i] / 2);
       ctx.fillRect(bar_x, canvas.height, bar_width, bar_height);
