@@ -1,0 +1,31 @@
+<html>
+  <head>
+    <title>Web Synth</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body>
+   <div class="col-lg-12 text-center">
+     <div class="col-lg-offset-3 col-lg-6 spectrum-analyser">
+       <div id="canvas"></div>
+     </div>
+     <div class="col-lg-offset-3 col-lg-6 controls">
+       <label for="MasterFader">Master Volume</label>
+       <input id="volume" type="range" min="0" max="1.00" step="0.01" value="0.50" oninput="outputUpdate(value)"/>
+       <output for="volume" id="MasterVolumeOutput">50%</output>
+
+       <label>LP Filter</label>
+       <input id="LPcutoff" type="range" min="0" max="10000" step="0.1" value="10000" orient="vertical"/>
+
+       <label>HP Filter</label>
+       <input id="HPcutoff" type="range" min="0" max="10000" step="0.1" value="0"/>
+     </div>
+     <div class="col-lg-offset-3 col-lg-6">
+       <br>
+       <div id="keyboard"></div>
+     </div>
+   </div>
+   <script src="/bundle.js"></script>
+ </body>
+</html

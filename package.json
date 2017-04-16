@@ -1,0 +1,28 @@
+{
+  "name": "v2websynth",
+  "version": "1.0.0",
+  "description": "A synthesizer built using the web audio api",
+  "main": "src/entry.js",
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "expose-loader": "^0.7.3",
+    "jquery": "^3.2.1",
+    "lodash": "^4.17.4"
+  },
+  "devDependencies": {
+    "bootstrap-sass": "^3.3.7",
+    "css-loader": "^0.28.0",
+    "file-loader": "^0.11.1",
+    "node-sass": "^4.5.2",
+    "resolve-url-loader": "^2.0.2",
+    "sass-loader": "^6.0.3",
+    "style-loader": "^0.16.1",
+    "url-loader": "^0.5.8",
+    "webpack": "^2.4.1"
+  },
+  "scripts": {
+    "test": "test"
+  },
+  "author": "Tinus Wagner",
+  "license": "ISC"
+}
