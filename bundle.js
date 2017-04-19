@@ -20071,8 +20071,9 @@ filter2.type = "highpass";
 // init Delay
 var delayEffect = context.createDelay(5);
 
-// init feedback
+// init feedback & feedbackFilter
 var delayFeedback = context.createGain();
+var feedbackFilter = context.createBiquadFilter()
 
 // State that will save global variables and levels
 var STATE = {
@@ -20080,15 +20081,18 @@ var STATE = {
   LPcutoff : 10000,
   HPcutoff : 0,
   delayAmnt: 0.5,
-  delayFeedback: 0.8
+  delayFeedback: 0.8,
+  feedbackFilter: 1000
 }
 
 // Initial State
 filter.frequency.value = STATE.LPcutoff;
 filter2.frequency.value = STATE.HPcutoff;
 delayEffect.delayTime.value = STATE.delayAmnt;
-delayFeedback.gain.value = STATE.delayFeedback
+delayFeedback.gain.value = STATE.delayFeedback;
+feedbackFilter.frequency.value = STATE.feedbackFilter;
 masterGain.gain.value = STATE.volume;
+
 
 // Function to alter Master Volume
 function changeMasterVolume(volume){
@@ -20179,11 +20183,11 @@ keyboard.keyDown = function (note, frequency) {
     filter2.connect(delayEffect);
     delayEffect.connect(delayFeedback);
     delayFeedback.connect(delayEffect);
-    delayEffect.connect(analyser);
+    delayFeedback.connect(feedbackFilter);
+    feedbackFilter.connect(analyser);
     filter2.connect(analyser);
     analyser.connect(masterGain);
     masterGain.connect(context.destination);
-
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__visuals__["a" /* renderChart */])();
 };
 
