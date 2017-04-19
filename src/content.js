@@ -33,16 +33,26 @@ filter.type = "lowpass";
 var filter2 = context.createBiquadFilter();
 filter2.type = "highpass";
 
+// init Delay
+var delayEffect = context.createDelay(5);
+
+// init feedback
+var delayFeedback = context.createGain();
+
 // State that will save global variables and levels
 var STATE = {
   volume: 0.5,
   LPcutoff : 10000,
-  HPcutoff : 0
+  HPcutoff : 0,
+  delayAmnt: 0.5,
+  delayFeedback: 0.8
 }
 
 // Initial State
 filter.frequency.value = STATE.LPcutoff;
 filter2.frequency.value = STATE.HPcutoff;
+delayEffect.delayTime.value = STATE.delayAmnt;
+delayFeedback.gain.value = STATE.delayFeedback
 masterGain.gain.value = STATE.volume;
 
 // Function to alter Master Volume
@@ -56,6 +66,14 @@ function changeLPcutoff(LPcutoff){
 
 function changeHPcutoff(HPcutoff){
   STATE.HPcutoff = HPcutoff;
+}
+
+function changeDelayTime(delayAmnt){
+  STATE.delayAmnt = delayAmnt;
+}
+
+function changeDelayFeedback(feedback){
+  STATE.delayFeedback = delayFeedback;
 }
 
 // Listener for MasterVolume
@@ -75,7 +93,6 @@ var LPcutoff = document.getElementById("LPcutoff");
 LPcutoff.addEventListener("change", function(){
   changeLPcutoff(this.value);
   filter.frequency.value = this.value;
-
 });
 
 // Listener for HIGHPASS FILTER CUTOFF
@@ -84,7 +101,22 @@ var LPcutoff = document.getElementById("HPcutoff");
 LPcutoff.addEventListener("change", function(){
   changeHPcutoff(this.value);
   filter2.frequency.value = this.value;
+});
 
+// Listener for Delay Effect
+var delayAmnt = document.getElementById("delayAmnt");
+
+delayAmnt.addEventListener("change", function(){
+  changeDelayTime(this.value);
+  delayEffect.delayTime.value = this.value;
+});
+
+// Listener for Delay Feedback Amount
+var delayFeedbackAmnt = document.getElementById("delayFeedbackAmnt");
+
+delayFeedbackAmnt.addEventListener("change", function(){
+  changeDelayFeedback(this.value);
+  delayFeedback.gain.value = this.value;
 });
 
 // Keydown Event
@@ -109,6 +141,10 @@ keyboard.keyDown = function (note, frequency) {
     filter.connect(filter2);
 
     // And connect Signal Path
+    filter2.connect(delayEffect);
+    delayEffect.connect(delayFeedback);
+    delayFeedback.connect(delayEffect);
+    delayEffect.connect(analyser);
     filter2.connect(analyser);
     analyser.connect(masterGain);
     masterGain.connect(context.destination);
