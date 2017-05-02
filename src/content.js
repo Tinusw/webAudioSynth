@@ -1,16 +1,19 @@
 import {renderChart} from "./visuals"
 var QwertyHancock = require("./kwerty.js")
 
+var keyboardDiv = document.getElementById("keyboard");
+var divWidth = keyboardDiv.clientWidth;
+
 var keyboard = new QwertyHancock({
   id: 'keyboard',
-  width: 700,
+  width: divWidth,
   height: 150,
   startNote: 'A2',
   whiteNotesColour: '#fff',
   blackNotesColour: '#000',
   borderColour: '#000',
   activeColour: 'orange',
-  octaves: 3
+  octaves: 4
 });
 
 function outputUpdate(vol) {
