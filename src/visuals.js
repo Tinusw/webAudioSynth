@@ -11,7 +11,7 @@ var divHeight = analyserDiv.clientHeight;
 
 // Todo
 // Review why I cannot use divHeight here
-var svgHeight = 210;
+var svgHeight = 200;
 // Todo
 // Review why divWidth is returning a number bigger than the div
 var svgWidth = divWidth - 62;

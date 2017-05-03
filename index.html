@@ -15,11 +15,11 @@
                 <h3>OSC 1</h3>
               </div>
               <div class="col-lg-6">
-                <select name="waveform">
+                <select name="waveform" id="osc1Type">
                   <option value="sine">sine</option>
                   <option value="triangle">triangle</option>
                   <option value="square">square</option>
-                  <option value="saw">saw</option>
+                  <option value="sawtooth">saw</option>
                 </select>
               </div>
             </div>
@@ -33,7 +33,7 @@
                 <label>Stack</label>
               </div>
               <div class="col-lg-4">
-                <input id="Osc1Detune" type="range" min="0" max="10000" step="0.1" value="0" orient="vertical"/>
+                <input id="Osc1Detune" type="range" min="0" max="100" step="1" value="0" orient="vertical"/>
                 <label>Detune</label>
               </div>
             </div>
@@ -45,11 +45,11 @@
                 <h3>OSC 2</h3>
               </div>
               <div class="col-lg-6">
-                <select name="waveform">
+                <select name="waveform" id="osc2Type">
                   <option value="sine">sine</option>
                   <option value="triangle">triangle</option>
                   <option value="square">square</option>
-                  <option value="saw">saw</option>
+                  <option value="sawtooth">saw</option>
                 </select>
               </div>
             </div>
@@ -63,7 +63,7 @@
                 <label>Stack</label>
               </div>
               <div class="col-lg-4">
-                <input id="Osc2Detune" type="range" min="0" max="10000" step="0.1" value="0" orient="vertical"/>
+                <input id="Osc2Detune" type="range" min="0" max="100" step="1" value="0" orient="vertical"/>
                 <label>Detune</label>
               </div>
             </div>
@@ -161,7 +161,7 @@
             <h3>Mixer</h3>
             <label for="MasterFader">Master Volume</label>
             <input id="volume" type="range" min="0" max="1.00" step="0.1" value="0.5" orient="vertical" oninput="outputUpdate(value)"/>
-            <!-- TODO FIX OUTPU -->
+            <!-- TODO FIX OUTPUT -->
             <output for="volume" id="MasterVolumeOutput"></output>
           </div>
         </div>

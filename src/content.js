@@ -8,14 +8,14 @@ var keyboardWidth = keyboardDiv.clientWidth;
 
 var keyboard = new QwertyHancock({
   id: 'keyboard',
-  width: keyboardWidth/2,
+  width: keyboardWidth-110,
   height: 150,
-  startNote: 'A1',
+  startNote: 'A2',
   whiteNotesColour: '#fff',
   blackNotesColour: '#000',
   borderColour: '#000',
   activeColour: 'orange',
-  octaves: 2
+  octaves: 3
 });
 
 function outputUpdate(vol) {
@@ -47,6 +47,10 @@ var feedbackFilter = context.createBiquadFilter()
 
 // State that will save global variables and levels
 var STATE = {
+  osc1Type: 'sine',
+  osc1Detune: 0,
+  osc2Type: 'sine',
+  osc2Detune: 0,
   volume: 0.5,
   LPcutoff : 10000,
   HPcutoff : 0,
@@ -62,6 +66,14 @@ delayEffect.delayTime.value = STATE.delayAmnt;
 delayFeedback.gain.value = STATE.delayFeedback;
 feedbackFilter.frequency.value = STATE.feedbackFilter;
 masterGain.gain.value = STATE.volume;
+
+function changeOsc1Type(osc1Type){
+  STATE.osc1Type = osc1Type;
+}
+
+function changeOsc2Type(osc2Type){
+  STATE.osc2Type = osc2Type;
+}
 
 
 // Function to alter Master Volume
@@ -84,6 +96,36 @@ function changeDelayTime(delayAmnt){
 function changeDelayFeedback(feedback){
   STATE.delayFeedback = delayFeedback;
 }
+
+// OSC 1 LISTENERS
+
+var osc1Type = document.getElementById("osc1Type");
+
+osc1Type.addEventListener("change", function(){
+  STATE.osc1Type = this.value;
+})
+
+var osc1Detune = document.getElementById("Osc1Detune");
+
+osc1Detune.addEventListener("change", function(){
+  STATE.osc1Detune = this.value;
+})
+
+// OSC 2 LISTENERS
+
+var osc2Type = document.getElementById("osc2Type");
+
+osc2Type.addEventListener("change", function(){
+  STATE.osc2Type = this.value;
+})
+
+var osc2Detune = document.getElementById("Osc2Detune");
+
+osc2Detune.addEventListener("change", function(){
+  STATE.osc2Detune = this.value;
+})
+
+
 
 // Listener for MasterVolume
 var MasterVolume = document.getElementById("volume");
@@ -132,15 +174,15 @@ delayFeedbackAmnt.addEventListener("change", function(){
 keyboard.keyDown = function (note, frequency) {
     // create our two oscilators
     var oscillator = context.createOscillator();
-    oscillator.type = 'sawtooth';
+    oscillator.type = STATE.osc1Type;
     oscillator.frequency.value = frequency;
-    oscillator.detune.value = -10;
+    oscillator.detune.value = STATE.osc1Detune;
     oscillator.start(context.currentTime);
 
     var oscillator2 = context.createOscillator();
-    oscillator2.type = 'sawtooth';
+    oscillator2.type = STATE.osc2Type;
     oscillator2.frequency.value = frequency;
-    oscillator2.detune.value = 10;
+    oscillator2.detune.value = STATE.osc2Detune;
     oscillator2.start(context.currentTime);
 
     oscillators[frequency] = [oscillator, oscillator2];
