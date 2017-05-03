@@ -6,6 +6,7 @@ This is a little synthesizer with:
 - A delay circuit with Adjustable delay time, feedback, as well as a seperate filter on the delay!
 
 The project is bundled using webpack so to get started run
+`npm install`
 `webpack-dev-server --progress --colors`
 
 Todo

@@ -126,8 +126,6 @@ osc2Detune.addEventListener("change", function(){
   STATE.osc2Detune = this.value;
 })
 
-
-
 // Listener for MasterVolume
 var MasterVolume = document.getElementById("volume");
 
