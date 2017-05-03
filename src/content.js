@@ -1,19 +1,21 @@
 import {renderChart} from "./visuals"
 var QwertyHancock = require("./kwerty.js")
 
-var keyboardDiv = document.getElementById("keyboard");
-var divWidth = keyboardDiv.clientWidth;
+// Todo
+// figure this out so we can dynamically set the keyboard width
+var keyboardDiv = document.getElementById("keyboard-container");
+var keyboardWidth = keyboardDiv.clientWidth;
 
 var keyboard = new QwertyHancock({
   id: 'keyboard',
-  width: divWidth,
+  width: keyboardWidth/2,
   height: 150,
-  startNote: 'A2',
+  startNote: 'A1',
   whiteNotesColour: '#fff',
   blackNotesColour: '#000',
   borderColour: '#000',
   activeColour: 'orange',
-  octaves: 4
+  octaves: 2
 });
 
 function outputUpdate(vol) {
@@ -49,7 +51,7 @@ var STATE = {
   LPcutoff : 10000,
   HPcutoff : 0,
   delayAmnt: 0.5,
-  delayFeedback: 0.8,
+  delayFeedback: 0.2,
   feedbackFilter: 1000
 }
 

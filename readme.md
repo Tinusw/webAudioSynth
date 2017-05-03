@@ -7,3 +7,7 @@ This is a little synthesizer with:
 
 The project is bundled using webpack so to get started run
 `webpack-dev-server --progress --colors`
+
+Todo
+- try impliment these sliders
+http://codepen.io/prythm/pen/RNBzeK

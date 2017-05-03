@@ -2,14 +2,19 @@ import * as d3 from "d3";
 import { analyser } from "./content.js"
 
 // visuals
-var frequencyData = new Uint8Array(380);
+var frequencyData = new Uint8Array(255);
 // Create our analyser and vars
 var analyserDiv = document.getElementById("spectrum-analyser");
 var divWidth = analyserDiv.clientWidth;
+console.log(divWidth)
+var divHeight = analyserDiv.clientHeight;
 
-var svgHeight = 300;
-var svgWidth = divWidth+2;
-var barPadding = 1;
+// Todo
+// Review why I cannot use divHeight here
+var svgHeight = 210;
+// Todo
+// Review why divWidth is returning a number bigger than the div
+var svgWidth = divWidth - 62;
 
 function createSvg(parent, height, width){
   return d3.select(parent).append('svg').attr('height', height).attr('width', width)
