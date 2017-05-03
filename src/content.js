@@ -30,6 +30,7 @@ var context = new AudioContext(),keyboard;
 
 var masterGain = context.createGain();
 var nodes = [];
+// Global object to expose scoped variable
 var oscillators = {};
 
 // init LP and HP filters
@@ -170,25 +171,22 @@ delayFeedbackAmnt.addEventListener("change", function(){
   delayFeedback.gain.value = this.value;
 });
 
+function createOscillator(type,frequency,detune){
+  oscillators.oscillator = context.createOscillator();
+  oscillators.oscillator.type = type;
+  oscillators.oscillator.frequency.value = frequency;
+  oscillators.oscillator.detune.value = detune;
+  oscillators.oscillator.start(context.currentTime);
+}
+
 // Keydown Event
 keyboard.keyDown = function (note, frequency) {
     // create our two oscilators
-    var oscillator = context.createOscillator();
-    oscillator.type = STATE.osc1Type;
-    oscillator.frequency.value = frequency;
-    oscillator.detune.value = STATE.osc1Detune;
-    oscillator.start(context.currentTime);
+    createOscillator(STATE.osc1Type, frequency, STATE.osc1Detune);
+    // createOscillator(oscillator2, STATE.osc2Type, frequency, STATE.osc2Detune);
 
-    var oscillator2 = context.createOscillator();
-    oscillator2.type = STATE.osc2Type;
-    oscillator2.frequency.value = frequency;
-    oscillator2.detune.value = STATE.osc2Detune;
-    oscillator2.start(context.currentTime);
-
-    oscillators[frequency] = [oscillator, oscillator2];
-
-    oscillator.connect(filter);
-    oscillator2.connect(filter);
+    oscillators.oscillator.connect(filter);
+    // oscillator2.connect(filter);
     filter.connect(filter2);
 
     // And connect Signal Path
@@ -205,10 +203,11 @@ keyboard.keyDown = function (note, frequency) {
 
 // KeyUp or stop note event
 keyboard.keyUp = function (note, frequency) {
-    oscillators[frequency].forEach(function(oscillator){
-      oscillator.stop(context.currentTime)
-    });
+  for (var oscillator in oscillators){
+    if (oscillators.hasOwnProperty(oscillator)){
+      oscillators.oscillator.stop(context.currentTime);
+    }
   };
-;
+};
 
 export {analyser}
