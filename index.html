@@ -16,10 +16,10 @@
               </div>
               <div class="col-lg-6">
                 <select name="waveform" id="osc1Type">
+                  <option value="sawtooth">saw</option>
                   <option value="sine">sine</option>
                   <option value="triangle">triangle</option>
                   <option value="square">square</option>
-                  <option value="sawtooth">saw</option>
                 </select>
               </div>
             </div>
@@ -46,10 +46,10 @@
               </div>
               <div class="col-lg-6">
                 <select name="waveform" id="osc2Type">
+                  <option value="sawtooth">saw</option>
                   <option value="sine">sine</option>
                   <option value="triangle">triangle</option>
                   <option value="square">square</option>
-                  <option value="sawtooth">saw</option>
                 </select>
               </div>
             </div>
@@ -73,7 +73,7 @@
             <h3>Filter</h3>
             <div class="row">
               <div class="col-lg-3">
-                <input id="LPcutoff" type="range" min="0" max="1000" step="0.1" value="1000" orient="vertical"/>
+                <input id="LPcutoff" type="range" min="0" max="1000" step="1" value="1000" orient="vertical"/>
                 <label>LP</label>
               </div>
               <div class="col-lg-3">

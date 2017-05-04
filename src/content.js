@@ -22,7 +22,6 @@ function outputUpdate(vol) {
   document.querySelector('#MasterVolumeOutput').value = vol * 100 + "%";
 }
 
-
 // Browser Compatibility
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
 
@@ -48,15 +47,15 @@ var feedbackFilter = context.createBiquadFilter()
 
 // State that will save global variables and levels
 var STATE = {
-  osc1Type: 'sine',
+  osc1Type: 'sawtooth',
   osc1Detune: 0,
-  osc2Type: 'sine',
+  osc2Type: 'sawtooth',
   osc2Detune: 0,
   volume: 0.5,
-  LPcutoff : 10000,
+  LPcutoff : 1000,
   HPcutoff : 0,
   delayAmnt: 0.5,
-  delayFeedback: 0.2,
+  delayFeedback: 0,
   feedbackFilter: 1000
 }
 
@@ -75,7 +74,6 @@ function changeOsc1Type(osc1Type){
 function changeOsc2Type(osc2Type){
   STATE.osc2Type = osc2Type;
 }
-
 
 // Function to alter Master Volume
 function changeMasterVolume(volume){
@@ -132,7 +130,6 @@ var MasterVolume = document.getElementById("volume");
 MasterVolume.addEventListener("change", function(){
   changeMasterVolume(this.value);
   masterGain.gain.value = this.value;
-
 });
 
 var analyser = context.createAnalyser();
@@ -169,21 +166,45 @@ delayFeedbackAmnt.addEventListener("change", function(){
   delayFeedback.gain.value = this.value;
 });
 
-function createOscillator(type,frequency,detune){
-  oscillators.oscillator = context.createOscillator();
-  oscillators.oscillator.type = type;
-  oscillators.oscillator.frequency.value = frequency;
-  oscillators.oscillator.detune.value = detune;
-  oscillators.oscillator.start(context.currentTime);
+function createOscillatorInObject(type,frequency,detune){
+  var i = 0;
+  var oscillator_id = "oscillator" + i;
+  if(oscillators.hasOwnProperty(oscillator_id)){
+    // not incrementing for some reason
+    i = i + 1;
+    console.log(i)
+  } else {
+    createSingleOscillator(i, type, frequency, detune);
+  }
+}
+
+function createSingleOscillator(i,type, frequency, detune){
+  var oscillator_id = "oscillator" + i;
+  oscillators[oscillator_id] = context.createOscillator();
+  oscillators[oscillator_id].type = type;
+  oscillators[oscillator_id].frequency.value = frequency;
+  oscillators[oscillator_id].detune.value = detune;
+  oscillators[oscillator_id].start(context.currentTime);
+  oscillators[oscillator_id].connect(filter);
+}
+
+function stopOscillators(){
+  var i = 0;
+  var oscillator_id = "oscillator" + i;
+  for (var oscillator_id in oscillators){
+    if (oscillators.hasOwnProperty(oscillator_id)){
+      oscillators[oscillator_id].stop(context.currentTime);
+    }
+    i = i + 1;
+  };
 }
 
 // Keydown Event
 keyboard.keyDown = function (note, frequency) {
     // create our two oscilators
-    createOscillator(STATE.osc1Type, frequency, STATE.osc1Detune);
-    // createOscillator(oscillator2, STATE.osc2Type, frequency, STATE.osc2Detune);
+    createOscillatorInObject(STATE.osc1Type, frequency, STATE.osc1Detune);
+    // createOscillatorInObject(STATE.osc2Type, frequency, STATE.osc2Detune);
 
-    oscillators.oscillator.connect(filter);
     // oscillator2.connect(filter);
     filter.connect(filter2);
 
@@ -201,11 +222,7 @@ keyboard.keyDown = function (note, frequency) {
 
 // KeyUp or stop note event
 keyboard.keyUp = function (note, frequency) {
-  for (var oscillator in oscillators){
-    if (oscillators.hasOwnProperty(oscillator)){
-      oscillators.oscillator.stop(context.currentTime);
-    }
-  };
+  stopOscillators();
 };
 
 export {analyser}
