@@ -26,7 +26,8 @@ function outputUpdate(vol) {
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
 
 var context = new AudioContext(),keyboard;
-
+var osc1Gain = context.createGain();
+var osc2Gain = context.createGain();
 var masterGain = context.createGain();
 var nodes = [];
 // Global object to expose scoped variable
@@ -47,8 +48,10 @@ var feedbackFilter = context.createBiquadFilter()
 
 // State that will save global variables and levels
 var STATE = {
+  osc1Gain: 0.5,
   osc1Type: 'sawtooth',
   osc1Detune: 0,
+  osc2Gain: 0,
   osc2Type: 'sawtooth',
   osc2Detune: 0,
   volume: 0.5,
@@ -60,6 +63,8 @@ var STATE = {
 }
 
 // Initial State
+osc1Gain.gain.value = STATE.osc1Gain;
+osc2Gain.gain.value = STATE.osc2Gain;
 filter.frequency.value = STATE.LPcutoff;
 filter2.frequency.value = STATE.HPcutoff;
 delayEffect.delayTime.value = STATE.delayAmnt;
@@ -98,6 +103,12 @@ function changeDelayFeedback(feedback){
 
 // OSC 1 LISTENERS
 
+var osc1Gain = document.getElementById("osc1Gain")
+
+osc1Gain.addEventListener("change", function(){
+  STATE.osc1Gain = this.value;
+})
+
 var osc1Type = document.getElementById("osc1Type");
 
 osc1Type.addEventListener("change", function(){
@@ -111,6 +122,12 @@ osc1Detune.addEventListener("change", function(){
 })
 
 // OSC 2 LISTENERS
+
+var osc2Gain = document.getElementById("osc2Gain")
+
+osc2Gain.addEventListener("change", function(){
+  STATE.osc2Gain = this.value;
+})
 
 var osc2Type = document.getElementById("osc2Type");
 
@@ -167,16 +184,19 @@ delayFeedbackAmnt.addEventListener("change", function(){
 });
 
 // We're using this to uniquely identify oscillators
+// This is used by createOscillatorInObject
+// This is used by createSingleOscillator
+// This is used by stopOscillators
 var i = 0;
 
 function createOscillatorInObject(type,frequency,detune){
   var oscillator_id = "oscillator" + i;
   if(oscillators.hasOwnProperty(oscillator_id)){
-    // not incrementing for some reason
     i = i + 1;
     createSingleOscillator(i, type, frequency, detune);
     console.log(i)
   } else {
+    i = 0
     createSingleOscillator(i, type, frequency, detune);
   }
 }
@@ -188,7 +208,7 @@ function createSingleOscillator(i,type, frequency, detune){
   oscillators[oscillator_id].frequency.value = frequency;
   oscillators[oscillator_id].detune.value = detune;
   oscillators[oscillator_id].start(context.currentTime);
-  oscillators[oscillator_id].connect(filter);
+  oscillators[oscillator_id].connect(osc1Gain);
 }
 
 function stopOscillators(){
@@ -204,6 +224,7 @@ keyboard.keyDown = function (note, frequency) {
     // create our two oscilators
     createOscillatorInObject(STATE.osc1Type, frequency, STATE.osc1Detune);
     // createOscillatorInObject(STATE.osc2Type, frequency, STATE.osc2Detune);
+    osc1Gain.connect(filter)
 
     // oscillator2.connect(filter);
     filter.connect(filter2);
