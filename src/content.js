@@ -166,12 +166,15 @@ delayFeedbackAmnt.addEventListener("change", function(){
   delayFeedback.gain.value = this.value;
 });
 
+// We're using this to uniquely identify oscillators
+var i = 0;
+
 function createOscillatorInObject(type,frequency,detune){
-  var i = 0;
   var oscillator_id = "oscillator" + i;
   if(oscillators.hasOwnProperty(oscillator_id)){
     // not incrementing for some reason
     i = i + 1;
+    createSingleOscillator(i, type, frequency, detune);
     console.log(i)
   } else {
     createSingleOscillator(i, type, frequency, detune);
@@ -189,13 +192,10 @@ function createSingleOscillator(i,type, frequency, detune){
 }
 
 function stopOscillators(){
-  var i = 0;
-  var oscillator_id = "oscillator" + i;
   for (var oscillator_id in oscillators){
     if (oscillators.hasOwnProperty(oscillator_id)){
       oscillators[oscillator_id].stop(context.currentTime);
     }
-    i = i + 1;
   };
 }
 

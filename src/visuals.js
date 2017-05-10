@@ -11,10 +11,10 @@ var divHeight = analyserDiv.clientHeight;
 
 // Todo
 // Review why I cannot use divHeight here
-var svgHeight = 200;
+var svgHeight = 240;
 // Todo
 // Review why divWidth is returning a number bigger than the div
-var svgWidth = divWidth - 62;
+var svgWidth = divWidth - 100;
 
 function createSvg(parent, height, width){
   return d3.select(parent).append('svg').attr('height', height).attr('width', width)
