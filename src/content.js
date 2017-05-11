@@ -49,7 +49,7 @@ var STATE = {
   osc1Detune: 0,
   osc2Gain: 0.4,
   osc2Type: 'sawtooth',
-  osc2Detune: 0,
+  osc2Detune: 0.01,
   volume: 0.5,
   LPcutoff : 1000,
   HPcutoff : 0,
@@ -135,6 +135,18 @@ osc2Type.addEventListener("input", function(){
   STATE.osc2Type = this.value;
 })
 
+var osc2Oct = document.getElementById("Osc2Oct");
+
+osc2Oct.addEventListener("input", function(){
+  // TODO refine why both Oscillators are being screwed with
+  for (var oscillator_2_id in oscillators){
+    if (oscillators.hasOwnProperty(oscillator_2_id)){
+      console.log(oscillators)
+      oscillators[oscillator_2_id].detune.value = this.value;
+    }
+  };
+})
+
 // Listener for MasterVolume
 var MasterVolume = document.getElementById("volume");
 
@@ -189,23 +201,13 @@ function generateRandomNumber(min, max){
   return Math.floor(Math.random() * max) + min;
 }
 
-function createOscillatorInObject(type, frequency, detune){
+function createOscillatorInObject(type, frequency){
   var oscillator_id = "oscillator" + i;
   if(oscillators.hasOwnProperty(oscillator_id)){
     i = i + 1;
-    createSingleOscillator(i, type, frequency, detune + (i * generateRandomNumber(0.9, 1.5)));
+    createSingleOscillator(i, type, frequency, (i * generateRandomNumber(0.4, 0.9)));
   } else {
-    createSingleOscillator(i, type, frequency, detune);
-  }
-}
-
-function createOscillator2InObject(type, frequency, detune){
-  var oscillator_id = "oscillator2" + i;
-  if(oscillators.hasOwnProperty(oscillator_id)){
-    i = i + 1;
-    createSingleOscillator2(i, type, frequency, detune + (i * generateRandomNumber(0.9, 1.5)));
-  } else {
-    createSingleOscillator2(i, type, frequency, detune);
+    createSingleOscillator(i, type, frequency, (i * generateRandomNumber(0.4, 0.9)));
   }
 }
 
@@ -219,17 +221,30 @@ function createSingleOscillator(i, type, frequency, detune){
   oscillators[oscillator_id].connect(osc1Gain);
 }
 
-function createSingleOscillator2(i, type, frequency, detune){
-  var oscillator_id = "oscillator2" + i;
+function createOscillator2InObject(type, frequency){
+  var oscillator_id = "oscillator_2" + i;
+  if(oscillators.hasOwnProperty(oscillator_id)){
+    i = i + 1;
+    createSingleOscillator2(i, type, frequency);
+  } else {
+    createSingleOscillator2(i, type, frequency);
+  }
+}
+
+function createSingleOscillator2(i, type, frequency){
+  var oscillator_id = "oscillator_2" + i;
   oscillators[oscillator_id] = context.createOscillator();
   oscillators[oscillator_id].type = type;
   oscillators[oscillator_id].frequency.value = frequency;
-  oscillators[oscillator_id].detune.value = detune;
+  // Adds a slight bit of analogue wobble
+  oscillators[oscillator_id].detune.value = (STATE.osc2Detune * generateRandomNumber(0.4, 0.7));
+  console.log(STATE.osc2Detune);
   oscillators[oscillator_id].start(context.currentTime);
   oscillators[oscillator_id].connect(osc2Gain);
 }
 
 function stopOscillators(){
+  // Refactor
   for (var oscillator_id in oscillators){
     if (oscillators.hasOwnProperty(oscillator_id)){
       oscillators[oscillator_id].stop(context.currentTime);
@@ -246,9 +261,9 @@ function stopOscillators(){
 // Keydown Event
 keyboard.keyDown = function (note, frequency) {
     // create our two oscilators
-    createOscillatorInObject(STATE.osc1Type, frequency, STATE.osc1Detune);
+    createOscillatorInObject(STATE.osc1Type, frequency);
     // TODO SORT OUT OSC2 DETUNE
-    createOscillator2InObject(STATE.osc2Type, frequency+8, STATE.osc2Detune);
+    createOscillator2InObject(STATE.osc2Type, frequency, STATE.osc2Detune);
     osc1Gain.connect(filter);
     osc2Gain.connect(filter);
 
