@@ -42,13 +42,13 @@ function renderChart() {
   // Update d3 chart with data
   svg.selectAll('rect').data(frequencyData)
     .attr('y', function(d) {
-      return svgHeight -d;
+      return svgHeight - d;
     })
     .attr('height', function(d) {
       return d;
     })
     .attr('fill', function(d) {
-      return 'rgb(0,0,'+ d +' )';
+      return 'rgb(217,82,'+ d +' )';
     });
 }
 
