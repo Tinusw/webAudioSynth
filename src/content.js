@@ -18,10 +18,6 @@ var keyboard = new QwertyHancock({
   octaves: 3
 });
 
-function outputUpdate(vol) {
-  document.querySelector('#MasterVolumeOutput').value = vol * 100 + "%";
-}
-
 // Browser Compatibility
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
 
@@ -51,7 +47,7 @@ var STATE = {
   osc1Gain: 0.5,
   osc1Type: 'sawtooth',
   osc1Detune: 0,
-  osc2Gain: 0,
+  osc2Gain: 0.4,
   osc2Type: 'sawtooth',
   osc2Detune: 0,
   volume: 0.5,
@@ -72,8 +68,16 @@ delayFeedback.gain.value = STATE.delayFeedback;
 feedbackFilter.frequency.value = STATE.feedbackFilter;
 masterGain.gain.value = STATE.volume;
 
+function changeOsc1Volume(osc1Gain){
+  STATE.osc1Gain = osc1Gain;
+}
+
 function changeOsc1Type(osc1Type){
   STATE.osc1Type = osc1Type;
+}
+
+function changeOsc2Volume(osc2Gain){
+  STATE.osc2Gain = osc2Gain;
 }
 
 function changeOsc2Type(osc2Type){
@@ -103,48 +107,38 @@ function changeDelayFeedback(feedback){
 
 // OSC 1 LISTENERS
 
-var osc1Gain = document.getElementById("osc1Gain")
+var osc1Volume = document.getElementById("Osc1Gain")
 
-osc1Gain.addEventListener("change", function(){
-  STATE.osc1Gain = this.value;
+osc1Volume.addEventListener("input", function(){
+  osc1Gain.gain.value = this.value;
+  changeOsc1Volume(this.value);
 })
 
-var osc1Type = document.getElementById("osc1Type");
+var osc1Type = document.getElementById("Osc1Type");
 
-osc1Type.addEventListener("change", function(){
+osc1Type.addEventListener("input", function(){
   STATE.osc1Type = this.value;
-})
-
-var osc1Detune = document.getElementById("Osc1Detune");
-
-osc1Detune.addEventListener("change", function(){
-  STATE.osc1Detune = this.value;
 })
 
 // OSC 2 LISTENERS
 
-var osc2Gain = document.getElementById("osc2Gain")
+var osc2Volume = document.getElementById("Osc2Gain")
 
-osc2Gain.addEventListener("change", function(){
-  STATE.osc2Gain = this.value;
+osc2Volume.addEventListener("input", function(){
+  osc2Gain.gain.value = this.value;
+  changeOsc2Volume(this.value);
 })
 
-var osc2Type = document.getElementById("osc2Type");
+var osc2Type = document.getElementById("Osc2Type");
 
-osc2Type.addEventListener("change", function(){
+osc2Type.addEventListener("input", function(){
   STATE.osc2Type = this.value;
-})
-
-var osc2Detune = document.getElementById("Osc2Detune");
-
-osc2Detune.addEventListener("change", function(){
-  STATE.osc2Detune = this.value;
 })
 
 // Listener for MasterVolume
 var MasterVolume = document.getElementById("volume");
 
-MasterVolume.addEventListener("change", function(){
+MasterVolume.addEventListener("input", function(){
   changeMasterVolume(this.value);
   masterGain.gain.value = this.value;
 });
@@ -154,7 +148,7 @@ var analyser = context.createAnalyser();
 // Listener for LOWPASS FILTER CUTOFF
 var LPcutoff = document.getElementById("LPcutoff");
 
-LPcutoff.addEventListener("change", function(){
+LPcutoff.addEventListener("input", function(){
   changeLPcutoff(this.value);
   filter.frequency.value = this.value;
 });
@@ -162,7 +156,7 @@ LPcutoff.addEventListener("change", function(){
 // Listener for HIGHPASS FILTER CUTOFF
 var LPcutoff = document.getElementById("HPcutoff");
 
-LPcutoff.addEventListener("change", function(){
+LPcutoff.addEventListener("input", function(){
   changeHPcutoff(this.value);
   filter2.frequency.value = this.value;
 });
@@ -170,7 +164,7 @@ LPcutoff.addEventListener("change", function(){
 // Listener for Delay Effect
 var delayAmnt = document.getElementById("delayAmnt");
 
-delayAmnt.addEventListener("change", function(){
+delayAmnt.addEventListener("input", function(){
   changeDelayTime(this.value);
   delayEffect.delayTime.value = this.value;
 });
@@ -178,7 +172,7 @@ delayAmnt.addEventListener("change", function(){
 // Listener for Delay Feedback Amount
 var delayFeedbackAmnt = document.getElementById("delayFeedbackAmnt");
 
-delayFeedbackAmnt.addEventListener("change", function(){
+delayFeedbackAmnt.addEventListener("input", function(){
   changeDelayFeedback(this.value);
   delayFeedback.gain.value = this.value;
 });
@@ -189,19 +183,33 @@ delayFeedbackAmnt.addEventListener("change", function(){
 // This is used by stopOscillators
 var i = 0;
 
-function createOscillatorInObject(type,frequency,detune){
+// Every subsequent oscillator will have a slight amount of detune added to immitate an analog synthesizer
+// This is called by createOscillatorInObject
+function generateRandomNumber(min, max){
+  return Math.floor(Math.random() * max) + min;
+}
+
+function createOscillatorInObject(type, frequency, detune){
   var oscillator_id = "oscillator" + i;
   if(oscillators.hasOwnProperty(oscillator_id)){
     i = i + 1;
-    createSingleOscillator(i, type, frequency, detune);
-    console.log(i)
+    createSingleOscillator(i, type, frequency, detune + (i * generateRandomNumber(0.9, 1.5)));
   } else {
-    i = 0
     createSingleOscillator(i, type, frequency, detune);
   }
 }
 
-function createSingleOscillator(i,type, frequency, detune){
+function createOscillator2InObject(type, frequency, detune){
+  var oscillator_id = "oscillator2" + i;
+  if(oscillators.hasOwnProperty(oscillator_id)){
+    i = i + 1;
+    createSingleOscillator2(i, type, frequency, detune + (i * generateRandomNumber(0.9, 1.5)));
+  } else {
+    createSingleOscillator2(i, type, frequency, detune);
+  }
+}
+
+function createSingleOscillator(i, type, frequency, detune){
   var oscillator_id = "oscillator" + i;
   oscillators[oscillator_id] = context.createOscillator();
   oscillators[oscillator_id].type = type;
@@ -211,20 +219,38 @@ function createSingleOscillator(i,type, frequency, detune){
   oscillators[oscillator_id].connect(osc1Gain);
 }
 
+function createSingleOscillator2(i, type, frequency, detune){
+  var oscillator_id = "oscillator2" + i;
+  oscillators[oscillator_id] = context.createOscillator();
+  oscillators[oscillator_id].type = type;
+  oscillators[oscillator_id].frequency.value = frequency;
+  oscillators[oscillator_id].detune.value = detune;
+  oscillators[oscillator_id].start(context.currentTime);
+  oscillators[oscillator_id].connect(osc2Gain);
+}
+
 function stopOscillators(){
   for (var oscillator_id in oscillators){
     if (oscillators.hasOwnProperty(oscillator_id)){
       oscillators[oscillator_id].stop(context.currentTime);
     }
   };
+  for (var oscillator2_id in oscillators){
+    if (oscillators.hasOwnProperty(oscillator2_id)){
+      oscillators[oscillator2_id].stop(context.currentTime);
+    }
+  };
 }
+
 
 // Keydown Event
 keyboard.keyDown = function (note, frequency) {
     // create our two oscilators
     createOscillatorInObject(STATE.osc1Type, frequency, STATE.osc1Detune);
-    // createOscillatorInObject(STATE.osc2Type, frequency, STATE.osc2Detune);
-    osc1Gain.connect(filter)
+    // TODO SORT OUT OSC2 DETUNE
+    createOscillator2InObject(STATE.osc2Type, frequency+8, STATE.osc2Detune);
+    osc1Gain.connect(filter);
+    osc2Gain.connect(filter);
 
     // oscillator2.connect(filter);
     filter.connect(filter2);
@@ -244,6 +270,8 @@ keyboard.keyDown = function (note, frequency) {
 // KeyUp or stop note event
 keyboard.keyUp = function (note, frequency) {
   stopOscillators();
+  // Only after successfully stopping all oscillators can we reset i
+  i = 0;
 };
 
 export {analyser}
