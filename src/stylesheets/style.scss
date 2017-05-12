@@ -10,7 +10,17 @@ body {
   padding: 5% 5% 5% 5%;
   .synth-panel {
     min-height: 33vh;
-    // margin: 1px 1px 1px 1px;
+    .btn-md {
+      &:active{
+        animation: 2s ease-in;
+        background-color: #f0ad4e;
+        border-color: #eea236;
+      }
+      label{
+        padding: 2px;
+        min-width: 20px;
+      }
+    }
     .col-lg-4 {
       margin: 1px 1px 1px 1px;
     }

@@ -9,32 +9,49 @@
     <div class="container-fluid">
       <div class="col-lg-12 top-row">
         <div class="col-lg-2 panel synth-panel text-left">
-          <h3>OSC 1</h3>
-          <select name="waveform" id="Osc1Type">
-            <option value="sawtooth">saw</option>
-            <option value="sine">sine</option>
-            <option value="triangle">triangle</option>
-            <option value="square">square</option>
-          </select>
-          <input id="Osc1Gain" type="range" min="0" max="1" step="0.01" value="0.5" orient="vertical"/>
-          <label>Vol</label>
+          <div class="row">
+            <h3>OSC 1</h3>
+            <select name="waveform" class="form-control" id="Osc1Type">
+              <option value="sawtooth">saw</option>
+              <option value="sine">sine</option>
+              <option value="triangle">triangle</option>
+              <option value="square">square</option>
+            </select>
+          <div class="col-lg-6">
+            <input id="Osc1Gain" type="range" min="0" max="1" step="0.01" value="0.5" orient="vertical"/>
+            <label>Vol</label>
+          </div>
+        </div>
         </div>
 
         <div class="col-lg-2 panel synth-panel text-left">
-          <h3>OSC 2</h3>
-          <select name="waveform" id="Osc2Type">
-            <option value="sawtooth">saw</option>
-            <option value="sine">sine</option>
-            <option value="triangle">triangle</option>
-            <option value="square">square</option>
-          </select>
-          <input id="Osc2Gain" type="range" min="0" max="1" step="0.01" value="0.5" orient="vertical"/>
-          <label>Vol</label>
-          <input id="Osc2Oct" type="range" min="0" max="100" step="0.01" value="0.5" orient="vertical"/>
-          <label>detune</label>
+          <div class="row">
+            <h3>OSC 2</h3>
+            <select name="waveform" class="form-control" id="Osc2Type">
+              <option value="sawtooth">saw</option>
+              <option value="sine">sine</option>
+              <option value="triangle">triangle</option>
+              <option value="square">square</option>
+            </select>
+            <div class="col-lg-6">
+              <input id="Osc2Gain" type="range" min="0" max="1" step="0.01" value="0.5" orient="vertical"/>
+              <label>Vol</label>
+            </div>
 
+            <div class="col-lg-6">
+              <button class="btn btn-md btn-success" id="octUp">
+                <label>+1</labe>
+              </button>
+              <button class="btn btn-md btn-info" id="octNormal">
+                <label> 0</labe>
+              </button>
+              <button class="btn btn-md btn-danger" id="octDown">
+                <label>-1</labe>
+              </button>
+              <label>Octave Switch</label>
+            </div>
+          </div>
         </div>
-
         <div class="col-lg-3 panel synth-panel text-center">
           <h3>Filter</h3>
           <div class="row">

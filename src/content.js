@@ -134,17 +134,22 @@ var osc2Type = document.getElementById("Osc2Type");
 osc2Type.addEventListener("input", function(){
   STATE.osc2Type = this.value;
 })
+var octave = 0;
 
-var osc2Oct = document.getElementById("Osc2Oct");
+var octaveUp = document.getElementById("octUp");
+octaveUp.addEventListener("click", function(){
+  // If an octave up we simply multiply existing frequency
+  octave = 1;
+})
 
-osc2Oct.addEventListener("input", function(){
-  // TODO refine why both Oscillators are being screwed with
-  for (var oscillator_2_id in oscillators){
-    if (oscillators.hasOwnProperty(oscillator_2_id)){
-      console.log(oscillators)
-      oscillators[oscillator_2_id].detune.value = this.value;
-    }
-  };
+var octaveNormal = document.getElementById("octNormal");
+octaveNormal.addEventListener("click", function(){
+  octave = 0;
+})
+
+var octaveDown = document.getElementById("octDown");
+octaveDown.addEventListener("click", function(){
+  octave = -1;
 })
 
 // Listener for MasterVolume
@@ -189,6 +194,15 @@ delayFeedbackAmnt.addEventListener("input", function(){
   delayFeedback.gain.value = this.value;
 });
 
+function checkOsc2frequency(octave, frequency){
+  if (octave >= 1){
+    return frequency = frequency * 2;
+  } else if (octave < 0){
+    return frequency = frequency / 2
+  } else {
+    return frequency;
+  }
+}
 // We're using this to uniquely identify oscillators
 // This is used by createOscillatorInObject
 // This is used by createSingleOscillator
@@ -223,11 +237,12 @@ function createSingleOscillator(i, type, frequency, detune){
 
 function createOscillator2InObject(type, frequency){
   var oscillator_id = "oscillator_2" + i;
+  frequency = checkOsc2frequency(octave, frequency)
   if(oscillators.hasOwnProperty(oscillator_id)){
     i = i + 1;
-    createSingleOscillator2(i, type, frequency);
+    createSingleOscillator2(i, type, frequency );
   } else {
-    createSingleOscillator2(i, type, frequency);
+    createSingleOscillator2(i, type, frequency );
   }
 }
 
@@ -238,7 +253,6 @@ function createSingleOscillator2(i, type, frequency){
   oscillators[oscillator_id].frequency.value = frequency;
   // Adds a slight bit of analogue wobble
   oscillators[oscillator_id].detune.value = (STATE.osc2Detune * generateRandomNumber(0.4, 0.7));
-  console.log(STATE.osc2Detune);
   oscillators[oscillator_id].start(context.currentTime);
   oscillators[oscillator_id].connect(osc2Gain);
 }
