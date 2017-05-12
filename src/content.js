@@ -51,8 +51,10 @@ var STATE = {
   osc2Type: 'sawtooth',
   osc2Detune: 0.01,
   volume: 0.5,
-  LPcutoff : 1000,
+  LPcutoff : 4000,
+  LPreso: 0.0001,
   HPcutoff : 0,
+  HPreso: 0.0001,
   delayAmnt: 0.5,
   delayFeedback: 0,
   feedbackFilter: 1000
@@ -62,7 +64,9 @@ var STATE = {
 osc1Gain.gain.value = STATE.osc1Gain;
 osc2Gain.gain.value = STATE.osc2Gain;
 filter.frequency.value = STATE.LPcutoff;
+filter.Q.value = STATE.LPreso;
 filter2.frequency.value = STATE.HPcutoff;
+filter2.Q.value = STATE.HPreso;
 delayEffect.delayTime.value = STATE.delayAmnt;
 delayFeedback.gain.value = STATE.delayFeedback;
 feedbackFilter.frequency.value = STATE.feedbackFilter;
@@ -93,8 +97,16 @@ function changeLPcutoff(LPcutoff){
   STATE.LPcutoff = LPcutoff;
 }
 
+function changeLPreso(LPreso){
+  STATE.LPreso = LPreso;
+}
+
 function changeHPcutoff(HPcutoff){
   STATE.HPcutoff = HPcutoff;
+}
+
+function changeHPreso(HPreso){
+  STATE.HPreso = HPreso;
 }
 
 function changeDelayTime(delayAmnt){
@@ -170,13 +182,30 @@ LPcutoff.addEventListener("input", function(){
   filter.frequency.value = this.value;
 });
 
-// Listener for HIGHPASS FILTER CUTOFF
-var LPcutoff = document.getElementById("HPcutoff");
+// Listener for LOWPASS FILTER Q
 
-LPcutoff.addEventListener("input", function(){
+var LPreso = document.getElementById("LPreso");
+
+LPreso.addEventListener("input", function(){
+  changeLPreso(this.value);
+  filter.Q.value = this.value;
+})
+
+// Listener for HIGHPASS FILTER CUTOFF
+var HPcutoff = document.getElementById("HPcutoff");
+
+HPcutoff.addEventListener("input", function(){
   changeHPcutoff(this.value);
   filter2.frequency.value = this.value;
 });
+
+var HPreso = document.getElementById("HPreso");
+
+HPreso.addEventListener("input", function(){
+  changeHPreso(this.value);
+  filter2.Q.value = this.value;
+})
+
 
 // Listener for Delay Effect
 var delayAmnt = document.getElementById("delayAmnt");
