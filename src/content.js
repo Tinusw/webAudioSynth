@@ -38,9 +38,58 @@ filter2.type = "highpass";
 // init Delay
 var delayEffect = context.createDelay(5);
 
+
 // init feedback & feedbackFilter
 var delayFeedback = context.createGain();
-var feedbackFilter = context.createBiquadFilter()
+var feedbackFilter = context.createBiquadFilter();
+
+// TODO
+// The reverb below isn't that great...
+// init reverb
+var reverbEffect = context.createConvolver();
+var impulseUrl = 'src/reverbSample.mp3';
+
+var irRRequest = new XMLHttpRequest();
+
+irRRequest.open("GET", "src/reverbSample.mp3", true);
+irRRequest.responseType = "arraybuffer";
+irRRequest.onload = function() {
+    context.decodeAudioData( irRRequest.response, function(buffer) {
+      filter2.buffer = buffer;
+      // reverbEffect.buffer = buffer;
+    } );
+}
+irRRequest.send();
+
+reverbEffect.buffer = filter2.buffer;
+
+// Distortion init
+var distortionEffect = context.createWaveShaper();
+
+function makeDistortionCurve(amount) {
+  var k = typeof amount === 'number' ? amount : 50,
+    n_samples = 44100,
+    curve = new Float32Array(n_samples),
+    deg = Math.PI / 180,
+    i = 0,
+    x;
+
+  for ( ; i < n_samples; ++i){
+    x = i * 2 / n_samples - 1;
+    curve[i] = ( 3 + k ) * x * 20 * deg / (Math.PI + k * Math.abs(x) );
+  }
+  return curve;
+};
+
+distortionEffect.curve = makeDistortionCurve(0);
+distortionEffect.oversample = '4x';
+
+
+
+
+
+
+
 
 // State that will save global variables and levels
 var STATE = {
@@ -211,7 +260,7 @@ HPreso.addEventListener("input", function(){
 // ************************
 
 // Draw SVG pad
-function canvasApp(canvasID) {
+function canvasApp(canvasID, effectType) {
 	var theCanvas = document.getElementById(canvasID);
 	var context = theCanvas.getContext("2d");
 
@@ -248,6 +297,7 @@ function canvasApp(canvasID) {
 		var tempColor;
     var tempShape;
 		for (i=0; i < numShapes; i++) {
+      // My canvas element is 240x240
 			tempRad = 10;
 			tempX = 0 + tempRad;
 			tempY = 240 - tempRad;
@@ -323,12 +373,7 @@ function canvasApp(canvasID) {
 		mouseX = (evt.clientX - bRect.left)*(theCanvas.width/bRect.width);
 		mouseY = (evt.clientY - bRect.top)*(theCanvas.height/bRect.height);
 
-    var DelayTime = ((mouseX/240) * 100);
-    var DelayFeedback = (100 - (mouseY/240) * 100);
-
-    // Set delay time as a portion of 2seconds
-    delayEffect.delayTime.value = DelayTime/100 * 2.0;
-    delayFeedback.gain.value = (DelayFeedback/100 * 1.0);
+    setEffects(mouseX, mouseY, effectType);
 
 		//clamp x and y positions to prevent object from dragging outside of canvas
 		posX = mouseX - dragHoldX;
@@ -370,26 +415,28 @@ function canvasApp(canvasID) {
 
 		drawShapes();
 	}
-
 }
 
-
+// This is called by our canvas element to conditionnaly update our effects
+function setEffects(mouseX, mouseY, effectType){
+  if (effectType == 'delay'){
+    // Divide by width of canvas and multiply to get percentage out of 100
+    var DelayTime = 100 - ((mouseX/240) * 100);
+    // Invert returned value to get percentage out of 100
+    var DelayFeedback = (100 - (mouseY/240) * 100);
+    // Set as portion of 2 seconds
+    delayEffect.delayTime.value = DelayTime/100 * 2.0;
+    // set delay feedback gain as value of random number
+    delayFeedback.gain.value = (DelayFeedback/100 * 1.0);
+  } else {
+    // Divide by width of canvas and multiply to get percentage out of 100
+    var DistortionX = ((mouseX/240) * 100);
+    var DistortionY = (100 - (mouseY/240) * 100);
+    distortionEffect.curve = makeDistortionCurve(DistortionX);
+    distortionEffect.oversample = '4x';
+  }
+}
 // ********************************************
-// Listener for Delay Effect
-var delayAmnt = document.getElementById("delayAmnt");
-
-delayAmnt.addEventListener("input", function(){
-  changeDelayTime(this.value);
-  delayEffect.delayTime.value = this.value;
-});
-
-// Listener for Delay Feedback Amount
-var delayFeedbackAmnt = document.getElementById("delayFeedbackAmnt");
-
-delayFeedbackAmnt.addEventListener("input", function(){
-  changeDelayFeedback(this.value);
-  delayFeedback.gain.value = this.value;
-});
 
 function checkOsc2frequency(octave, frequency){
   if (octave >= 1){
@@ -487,7 +534,8 @@ keyboard.keyDown = function (note, frequency) {
     delayFeedback.connect(delayEffect);
     delayFeedback.connect(feedbackFilter);
     feedbackFilter.connect(analyser);
-    filter2.connect(analyser);
+    filter2.connect(distortionEffect);
+    distortionEffect.connect(analyser)
     analyser.connect(masterGain);
     masterGain.connect(context.destination);
     renderChart();
@@ -503,9 +551,8 @@ keyboard.keyUp = function (note, frequency) {
 window.addEventListener("load", windowLoadHandler, false);
 
 function windowLoadHandler() {
-	canvasApp('delayPad', delayEffect.delayTime.value,
-  delayFeedback.gain.value);
-  // canvasApp('reverbPad');
+	canvasApp('delayPad', 'delay');
+  canvasApp('reverbPad', 'reverb');
 }
 
 
