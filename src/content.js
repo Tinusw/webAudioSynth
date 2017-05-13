@@ -250,7 +250,7 @@ function canvasApp(canvasID) {
 		for (i=0; i < numShapes; i++) {
 			tempRad = 10;
 			tempX = 0 + tempRad;
-			tempY = 300 - tempRad;
+			tempY = 240 - tempRad;
 			tempR = Math.floor(Math.random()*255);
 			tempG = Math.floor(Math.random()*255);
 			tempB = Math.floor(Math.random()*255);
@@ -321,8 +321,14 @@ function canvasApp(canvasID) {
 		//getting mouse position correctly
 		var bRect = theCanvas.getBoundingClientRect();
 		mouseX = (evt.clientX - bRect.left)*(theCanvas.width/bRect.width);
-    console.log('X - ' + mouseX + 'Y - ' + (300 - mouseY))
 		mouseY = (evt.clientY - bRect.top)*(theCanvas.height/bRect.height);
+
+    var DelayTime = ((mouseX/240) * 100);
+    var DelayFeedback = (100 - (mouseY/240) * 100);
+
+    // Set delay time as a portion of 2seconds
+    delayEffect.delayTime.value = DelayTime/100 * 2.0;
+    delayFeedback.gain.value = (DelayFeedback/100 * 1.0);
 
 		//clamp x and y positions to prevent object from dragging outside of canvas
 		posX = mouseX - dragHoldX;
@@ -497,7 +503,9 @@ keyboard.keyUp = function (note, frequency) {
 window.addEventListener("load", windowLoadHandler, false);
 
 function windowLoadHandler() {
-	canvasApp('delayPad');
+	canvasApp('delayPad', delayEffect.delayTime.value,
+  delayFeedback.gain.value);
+  // canvasApp('reverbPad');
 }
 
 
