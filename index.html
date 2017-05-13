@@ -77,11 +77,6 @@
         <div class="col-lg-5 panel synth-panel analyser" id="spectrum-analyser">
           <div id="canvas"></div>
         </div>
-
-      </div>
-
-          </div>
-        </div>
       </div>
       <div class="col-lg-12 bottom-row">
         <div class="row">
@@ -92,7 +87,7 @@
               <div class="col-lg-12 text-center">
                 <div class="row">
                   <div class="col-lg-4">
-                    <button class="btn btn-md">
+                  <button class="btn btn-md">
                       <label>1X</labe>
                     </button>
                   </div>
@@ -117,15 +112,11 @@
             </div>
           </div>
 
-          <div class="col-lg-2 panel synth-panel effects delay text-left">
+          <div class="col-lg-3 panel synth-panel effects delay text-left">
             <h3>Delay</h3>
             <div class="row">
-              <div class="col-lg-4">
-                <btn class="btn btn-md">
-                  <label>On</labe>
-                </btn>
-              </div>
-              <div class="col-lg-8 paenl x-y-pad">
+              <div class="col-lg-12">
+                <canvas id="delayPad" width="300" height="300"></canvas>
                 <h3>xyPad</h3>
               </div>
             </div>
@@ -145,7 +136,7 @@
             </div>
           </div>
 
-          <div class="col-lg-6 panel synth-panel text-center">
+          <div class="col-lg-4 panel synth-panel text-center">
             <h3>Mixer</h3>
             <label for="MasterFader">Master Volume</label>
             <input id="volume" type="range" min="0" max="1.00" step="0.1" value="0.5" orient="vertical" oninput="outputUpdate(value)"/>

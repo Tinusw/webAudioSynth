@@ -206,7 +206,169 @@ HPreso.addEventListener("input", function(){
   filter2.Q.value = this.value;
 })
 
+// ************************
+// Delay Effect
+// ************************
 
+// Draw SVG pad
+function canvasApp(canvasID) {
+	var theCanvas = document.getElementById(canvasID);
+	var context = theCanvas.getContext("2d");
+
+	init();
+
+	var numShapes;
+	var shapes;
+	var dragIndex;
+	var dragging;
+	var mouseX;
+	var mouseY;
+	var dragHoldX;
+	var dragHoldY;
+
+	function init() {
+		numShapes = 1;
+		shapes = [];
+
+		makeShapes();
+
+		drawScreen();
+
+		theCanvas.addEventListener("mousedown", mouseDownListener, false);
+	}
+
+	function makeShapes() {
+		var i;
+		var tempX;
+		var tempY;
+		var tempRad;
+		var tempR;
+		var tempG;
+		var tempB;
+		var tempColor;
+    var tempShape;
+		for (i=0; i < numShapes; i++) {
+			tempRad = 10;
+			tempX = 0 + tempRad;
+			tempY = 300 - tempRad;
+			tempR = Math.floor(Math.random()*255);
+			tempG = Math.floor(Math.random()*255);
+			tempB = Math.floor(Math.random()*255);
+			tempColor = "rgb(" + tempR + "," + tempG + "," + tempB +")";
+			tempShape = {x:tempX, y:tempY, rad:tempRad, color:tempColor};
+			shapes.push(tempShape);
+		}
+	}
+
+	function mouseDownListener(evt) {
+		var i;
+		//We are going to pay attention to the layering order of the objects so that if a mouse down occurs over more than object,
+		//only the topmost one will be dragged.
+		var highestIndex = -1;
+
+		//getting mouse position correctly, being mindful of resizing that may have occured in the browser:
+		var bRect = theCanvas.getBoundingClientRect();
+		mouseX = (evt.clientX - bRect.left)*(theCanvas.width/bRect.width);
+		mouseY = (evt.clientY - bRect.top)*(theCanvas.height/bRect.height);
+
+		//find which shape was clicked
+		for (i=0; i < numShapes; i++) {
+			if	(hitTest(shapes[i], mouseX, mouseY)) {
+				dragging = true;
+				if (i > highestIndex) {
+					//We will pay attention to the point on the object where the mouse is "holding" the object:
+					dragHoldX = mouseX - shapes[i].x;
+					dragHoldY = mouseY - shapes[i].y;
+					highestIndex = i;
+					dragIndex = i;
+				}
+			}
+		}
+
+		if (dragging) {
+			window.addEventListener("mousemove", mouseMoveListener, false);
+		}
+		theCanvas.removeEventListener("mousedown", mouseDownListener, false);
+		window.addEventListener("mouseup", mouseUpListener, false);
+
+		//code below prevents the mouse down from having an effect on the main browser window:
+		if (evt.preventDefault) {
+			evt.preventDefault();
+		} //standard
+		else if (evt.returnValue) {
+			evt.returnValue = false;
+		} //older IE
+		return false;
+	}
+
+	function mouseUpListener(evt) {
+		theCanvas.addEventListener("mousedown", mouseDownListener, false);
+		window.removeEventListener("mouseup", mouseUpListener, false);
+		if (dragging) {
+			dragging = false;
+			window.removeEventListener("mousemove", mouseMoveListener, false);
+		}
+	}
+
+	function mouseMoveListener(evt) {
+		var posX;
+		var posY;
+		var shapeRad = shapes[dragIndex].rad;
+		var minX = shapeRad;
+		var maxX = theCanvas.width - shapeRad;
+		var minY = shapeRad;
+		var maxY = theCanvas.height - shapeRad;
+		//getting mouse position correctly
+		var bRect = theCanvas.getBoundingClientRect();
+		mouseX = (evt.clientX - bRect.left)*(theCanvas.width/bRect.width);
+    console.log('X - ' + mouseX + 'Y - ' + (300 - mouseY))
+		mouseY = (evt.clientY - bRect.top)*(theCanvas.height/bRect.height);
+
+		//clamp x and y positions to prevent object from dragging outside of canvas
+		posX = mouseX - dragHoldX;
+		posX = (posX < minX) ? minX : ((posX > maxX) ? maxX : posX);
+		posY = mouseY - dragHoldY;
+		posY = (posY < minY) ? minY : ((posY > maxY) ? maxY : posY);
+
+		shapes[dragIndex].x = posX;
+		shapes[dragIndex].y = posY;
+
+		drawScreen();
+	}
+
+	function hitTest(shape,mx,my) {
+
+		var dx;
+		var dy;
+		dx = mx - shape.x;
+		dy = my - shape.y;
+
+		//a "hit" will be registered if the distance away from the center is less than the radius of the circular object
+		return (dx*dx + dy*dy < shape.rad*shape.rad);
+	}
+
+	function drawShapes() {
+		var i;
+		for (i=0; i < numShapes; i++) {
+			context.fillStyle = shapes[i].color;
+			context.beginPath();
+			context.arc(shapes[i].x, shapes[i].y, shapes[i].rad, 0, 2*Math.PI, false);
+			context.closePath();
+			context.fill();
+		}
+	}
+
+	function drawScreen() {
+		context.fillStyle = "#000000";
+		context.fillRect(0,0,theCanvas.width,theCanvas.height);
+
+		drawShapes();
+	}
+
+}
+
+
+// ********************************************
 // Listener for Delay Effect
 var delayAmnt = document.getElementById("delayAmnt");
 
@@ -331,5 +493,12 @@ keyboard.keyUp = function (note, frequency) {
   // Only after successfully stopping all oscillators can we reset i
   i = 0;
 };
+
+window.addEventListener("load", windowLoadHandler, false);
+
+function windowLoadHandler() {
+	canvasApp('delayPad');
+}
+
 
 export {analyser}
