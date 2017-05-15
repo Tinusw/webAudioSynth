@@ -520,8 +520,6 @@ keyboard.keyDown = function (note, frequency) {
     createOscillator2InObject(STATE.osc2Type, frequency, STATE.osc2Detune);
     osc1Gain.connect(filter);
     osc2Gain.connect(filter);
-
-    // oscillator2.connect(filter);
     filter.connect(filter2);
 
     // And connect Signal Path

@@ -1,15 +1,20 @@
 body {
   background-color: #1D1B1E;
   overflow: hidden;
-  font: 12px 'Syncopate's, sans-serif;
+  font: 12px 'Syncopate', sans-serif;
   color: #333333;
   opacity: ease-in 0.2s;
 }
 
+h3 {
+  font-size: 18px;
+  margin-top: 5px;
+}
+
 .container-fluid {
-  padding: 5% 5% 5% 5%;
+  padding: 2% 2% 2% 2%;
   .synth-panel {
-    min-height: 33vh;
+    min-height: 30vh;
     .btn-md {
       &:active{
         animation: 2s ease-in;
