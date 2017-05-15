@@ -454,11 +454,13 @@ function checkOsc2frequency(octave, frequency){
 var i = 0;
 
 // Every subsequent oscillator will have a slight amount of detune added to immitate an analog synthesizer
+// The random number generator below takes care of that.
 // This is called by createOscillatorInObject
 function generateRandomNumber(min, max){
   return Math.floor(Math.random() * max) + min;
 }
 
+// We're using to oscillator objects to diffirentiate between OSC 1 & 2
 function createOscillatorInObject(type, frequency){
   var oscillator_id = "oscillator" + i;
   if(oscillators.hasOwnProperty(oscillator_id)){
@@ -466,6 +468,17 @@ function createOscillatorInObject(type, frequency){
     createSingleOscillator(i, type, frequency, (i * generateRandomNumber(0.4, 0.9)));
   } else {
     createSingleOscillator(i, type, frequency, (i * generateRandomNumber(0.4, 0.9)));
+  }
+}
+
+function createOscillator2InObject(type, frequency){
+  var oscillator_id = "oscillator_2" + i;
+  frequency = checkOsc2frequency(octave, frequency)
+  if(oscillators.hasOwnProperty(oscillator_id)){
+    i = i + 1;
+    createSingleOscillator2(i, type, frequency, (i * generateRandomNumber(0.4, 0.9)));
+  } else {
+    createSingleOscillator2(i, type, frequency, (i * generateRandomNumber(0.4, 0.9)));
   }
 }
 
@@ -479,38 +492,21 @@ function createSingleOscillator(i, type, frequency, detune){
   oscillators[oscillator_id].connect(osc1Gain);
 }
 
-function createOscillator2InObject(type, frequency){
-  var oscillator_id = "oscillator_2" + i;
-  frequency = checkOsc2frequency(octave, frequency)
-  if(oscillators.hasOwnProperty(oscillator_id)){
-    i = i + 1;
-    createSingleOscillator2(i, type, frequency );
-  } else {
-    createSingleOscillator2(i, type, frequency );
-  }
-}
-
-function createSingleOscillator2(i, type, frequency){
+function createSingleOscillator2(i, type, frequency, detune){
   var oscillator_id = "oscillator_2" + i;
   oscillators[oscillator_id] = context.createOscillator();
   oscillators[oscillator_id].type = type;
   oscillators[oscillator_id].frequency.value = frequency;
   // Adds a slight bit of analogue wobble
-  oscillators[oscillator_id].detune.value = (STATE.osc2Detune * generateRandomNumber(0.4, 0.7));
+  oscillators[oscillator_id].detune.value = detune;
   oscillators[oscillator_id].start(context.currentTime);
   oscillators[oscillator_id].connect(osc2Gain);
 }
 
 function stopOscillators(){
-  // Refactor
   for (var oscillator_id in oscillators){
     if (oscillators.hasOwnProperty(oscillator_id)){
       oscillators[oscillator_id].stop(context.currentTime);
-    }
-  };
-  for (var oscillator2_id in oscillators){
-    if (oscillators.hasOwnProperty(oscillator2_id)){
-      oscillators[oscillator2_id].stop(context.currentTime);
     }
   };
 }
