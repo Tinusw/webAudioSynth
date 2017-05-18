@@ -1,5 +1,10 @@
+$base-grey: #e1eef6;
+$low-orange: #ff5f2e;
+$mid-yellow: #fcbe32;
+$high-blue: #004e66;
+
 body {
-  background-color: #1D1B1E;
+  background-color: #e1eef6;
   overflow: hidden;
   font: 12px 'Syncopate', sans-serif;
   color: #333333;
@@ -13,6 +18,14 @@ h3 {
 
 .container-fluid {
   padding: 2% 2% 2% 2%;
+  .top-row{
+    .octave-switch{
+      .subtitle{
+        margin-top: 22px;
+        margin-bottom: 0;
+      }
+    }
+  }
   .synth-panel {
     min-height: 30%;
     .btn-md {
@@ -41,8 +54,16 @@ h3 {
   }
 }
 
+// HTML elements
+.dropdown-osc{
+  margin-bottom: 5px;
+  width: 30%;
+}
+
+
 input[type=range][orient=vertical]{
   -webkit-appearance: slider-vertical;
   height: 20%;
   width: 10%;
+  margin-left: 50%;
 }

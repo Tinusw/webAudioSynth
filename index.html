@@ -7,56 +7,99 @@
   </head>
   <body>
     <div class="container-fluid">
-      <div class="col-lg-12 top-row">
-        <div class="col-lg-2 panel synth-panel text-left">
+      <div class="row top-row">
+        <!-- OSC 1 -->
+        <div class="col-lg-2">
+          <h3>OSC 1</h3>
+          <select name="waveform" class="form-control dropdown-osc" id="Osc1Type">
+            <option value="sawtooth">saw</option>
+            <option value="sine">sine</option>
+            <option value="triangle">triangle</option>
+            <option value="square">square</option>
+          </select>
           <div class="row">
-            <div class="col-lg-6">
-              <h3>OSC 1</h3>
+            <div class="col-lg-2 text-center">
+              <input id="Osc1Gain" type="range" min="0" max="1" step="0.01" value="0.5" orient="vertical"/>
+              <label>Volume</label>
             </div>
-            <div class="col-lg-6">
-              <select name="waveform" class="form-control" id="Osc1Type">
-                <option value="sawtooth">saw</option>
-                <option value="sine">sine</option>
-                <option value="triangle">triangle</option>
-                <option value="square">square</option>
-              </select>
+            <div class="col-lg-2 text-center">
+              <input id="Osc1Release" type="range" min="0" max="1" step="0.01" value="0.5" orient="vertical"/>
+              <label>Release</label>
             </div>
-          <div class="col-lg-6">
-            <input id="Osc1Gain" type="range" min="0" max="1" step="0.01" value="0.5" orient="vertical"/>
-            <label>Vol</label>
           </div>
         </div>
+        <!-- OSC 2 -->
+        <div class="col-lg-2">
+          <h3>OSC 2</h3>
+          <select name="waveform" class="form-control dropdown-osc" id="Osc2Type">
+            <option value="sawtooth">saw</option>
+            <option value="sine">sine</option>
+            <option value="triangle">triangle</option>
+            <option value="square">square</option>
+          </select>
+          <div class="row">
+            <div class="col-lg-2 text-center">
+              <input id="Osc2Gain" type="range" min="0" max="1" step="0.01" value="0.5" orient="vertical"/>
+              <label>Volume</label>
+            </div>
+            <div class="col-lg-2 text-center">
+              <input id="Osc2Release" type="range" min="0" max="1" step="0.01" value="0.5" orient="vertical"/>
+              <label>Release</label>
+            </div>
+            <div class="col-lg-2 text-center octave-switch">
+              <button class="btn btn-md btn-success" id="octUp">
+                <label>1</labe>
+              </button>
+              <button class="btn btn-md btn-info" id="octNormal">
+                <label>0</labe>
+              </button>
+              <button class="btn btn-md btn-danger" id="octDown">
+                <label>1</labe>
+              </button>
+              <label class="subtitle">Octave</label>
+            </div>
+          </div>
         </div>
+        <!-- FILTER SECTION -->
+        <div class="col-lg-3">
+          <div class="row text-center">
+            <h3>Filter</h3>
+            <div class="col-lg-3">
+              <input id="LPcutoff" type="range" min="0" max="4000" step="1" value="4000" orient="vertical"/>
+              <label>Low Pass</label>
+            </div>
+            <div class="col-lg-3">
+              <input id="LPreso" type="range" min="0.0001" max="30" step="0.0001" value="0" orient="vertical"/>
+              <label>Resonance</label>
+            </div>
+            <div class="col-lg-3">
+              <input id="HPcutoff" type="range" min="0" max="11025" step="0.1" value="0" orient="vertical"/>
+              <label>High Pass</label>
+            </div>
+            <div class="col-lg-3">
+              <input id="HPreso" type="range" min="0.0001" max="30" step="0.0001" value="0" orient="vertical"/>
+              <label>Resonance</label>
+            </div>
+          </div>
+        </div>
+        <!-- SPECTRUM ANALYSER -->
+        <div class="col-lg-5" id="spectrum-analyser">
+          <div id="canvas"></div>
+        </div>
+      </div>
+    </div>
 
         <div class="col-lg-2 panel synth-panel text-left">
           <div class="row">
             <div class="col-lg-6">
-              <h3>OSC 2</h3>
             </div>
             <div class="col-lg-6">
-              <select name="waveform" class="form-control" id="Osc2Type">
-                <option value="sawtooth">saw</option>
-                <option value="sine">sine</option>
-                <option value="triangle">triangle</option>
-                <option value="square">square</option>
-              </select>
             </div>
             <div class="col-lg-6">
-              <input id="Osc2Gain" type="range" min="0" max="1" step="0.01" value="0.5" orient="vertical"/>
-              <label>Vol</label>
             </div>
 
             <div class="col-lg-6">
               <div class="row">
-                <button class="btn btn-md btn-success" id="octUp">
-                  <label>+1</labe>
-                </button>
-                <button class="btn btn-md btn-info" id="octNormal">
-                  <label> 0</labe>
-                </button>
-                <button class="btn btn-md btn-danger" id="octDown">
-                  <label>-1</labe>
-                </button>
               </div>
               <label>Octave Switch</label>
             </div>
@@ -64,27 +107,6 @@
         </div>
         <div class="col-lg-3 panel synth-panel text-center">
           <h3>Filter</h3>
-          <div class="row">
-            <div class="col-lg-3">
-              <input id="LPcutoff" type="range" min="0" max="4000" step="1" value="4000" orient="vertical"/>
-              <label>LP</label>
-            </div>
-            <div class="col-lg-3">
-              <input id="LPreso" type="range" min="0.0001" max="30" step="0.0001" value="0" orient="vertical"/>
-              <label>Reso</label>
-            </div>
-            <div class="col-lg-3">
-              <input id="HPcutoff" type="range" min="0" max="11025" step="0.1" value="0" orient="vertical"/>
-              <label>HP</label>
-            </div>
-            <div class="col-lg-3">
-              <input id="HPreso" type="range" min="0.0001" max="30" step="0.0001" value="0" orient="vertical"/>
-              <label>Reso</label>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-5 panel synth-panel analyser" id="spectrum-analyser">
-          <div id="canvas"></div>
         </div>
       </div>
 
