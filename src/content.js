@@ -412,10 +412,10 @@ function setEffects(mouseX, mouseY, effectType){
     // Divide by width of canvas and multiply to get percentage out of 100
     var DistortionX = (mouseX/240 * 100);
     var FilterY = (100 - (mouseY/240) * 100);
-    // Our filters complete range is 22050
-    filter3.frequency.value = (FilterY/100)*(22050*0.2);
-    filter3.Q.value = FilterY/100;
+    // Our filters complete range is 22050, we add random cause why not
+    filter3.frequency.value = ((FilterY/100)*((22050*0.2)) * generateRandomNumber(0.1, 1.7));
     console.log(filter3.frequency.value);
+    filter3.Q.value = FilterY/100;
     // console.log(filter3.Q.value);
     distortionEffect.curve = makeDistortionCurve(DistortionX * 4);
     distortionEffect.oversample = '4x';
