@@ -18,11 +18,11 @@
             <option value="square">square</option>
           </select>
           <div class="row">
-            <div class="col-lg-2 text-center">
+            <div class="col-lg-2 text-center osc-input">
               <input id="Osc1Gain" type="range" min="0" max="1" step="0.01" value="0.5" orient="vertical"/>
               <label>Volume</label>
             </div>
-            <div class="col-lg-2 text-center">
+            <div class="col-lg-2 text-center osc-input">
               <input id="Osc1Release" type="range" min="0" max="1" step="0.01" value="0.5" orient="vertical"/>
               <label>Release</label>
             </div>
@@ -38,23 +38,23 @@
             <option value="square">square</option>
           </select>
           <div class="row">
-            <div class="col-lg-2 text-center">
+            <div class="col-lg-2 text-center osc-input">
               <input id="Osc2Gain" type="range" min="0" max="1" step="0.01" value="0.5" orient="vertical"/>
               <label>Volume</label>
             </div>
-            <div class="col-lg-2 text-center">
+            <div class="col-lg-2 text-center osc-input">
               <input id="Osc2Release" type="range" min="0" max="1" step="0.01" value="0.5" orient="vertical"/>
               <label>Release</label>
             </div>
-            <div class="col-lg-2 text-center octave-switch">
-              <button class="btn btn-md btn-success" id="octUp">
-                <label>1</labe>
+            <div class="col-lg-4 text-center octave-switch">
+              <button class="btn btn-md inactive" id="octUp">
+                <label class="label">1</label>
               </button>
-              <button class="btn btn-md btn-info" id="octNormal">
-                <label>0</labe>
+              <button class="btn btn-md active" id="octNormal">
+                <label class="label">0</label>
               </button>
-              <button class="btn btn-md btn-danger" id="octDown">
-                <label>1</labe>
+              <button class="btn btn-md inactive" id="octDown" >
+                <label class="label">1</label>
               </button>
               <label class="subtitle">Octave</label>
             </div>
@@ -88,27 +88,6 @@
         </div>
       </div>
     </div>
-
-        <div class="col-lg-2 panel synth-panel text-left">
-          <div class="row">
-            <div class="col-lg-6">
-            </div>
-            <div class="col-lg-6">
-            </div>
-            <div class="col-lg-6">
-            </div>
-
-            <div class="col-lg-6">
-              <div class="row">
-              </div>
-              <label>Octave Switch</label>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-3 panel synth-panel text-center">
-          <h3>Filter</h3>
-        </div>
-      </div>
 
       <div class="col-lg-12 bottom-row">
         <div class="row">
