@@ -24,16 +24,23 @@ window.AudioContext = window.AudioContext || window.webkitAudioContext;
 var context = new AudioContext(),keyboard;
 var osc1Gain = context.createGain();
 var osc2Gain = context.createGain();
+var envelope = context.createGain();
 var masterGain = context.createGain();
 var nodes = [];
 // Global object to expose scoped variable
 var oscillators = {};
+
+// Initialize octave to 0
+var octave = 0;
 
 // init LP and HP filters
 var filter = context.createBiquadFilter();
 filter.type = "lowpass";
 var filter2 = context.createBiquadFilter();
 filter2.type = "highpass";
+var filter3 = context.createBiquadFilter();
+filter3.type = "highpass"
+
 
 // init Delay
 var delayEffect = context.createDelay(5);
@@ -42,26 +49,6 @@ var delayEffect = context.createDelay(5);
 // init feedback & feedbackFilter
 var delayFeedback = context.createGain();
 var feedbackFilter = context.createBiquadFilter();
-
-// TODO
-// The reverb below isn't that great...
-// init reverb
-var reverbEffect = context.createConvolver();
-var impulseUrl = 'src/reverbSample.mp3';
-
-var irRRequest = new XMLHttpRequest();
-
-irRRequest.open("GET", "src/reverbSample.mp3", true);
-irRRequest.responseType = "arraybuffer";
-irRRequest.onload = function() {
-    context.decodeAudioData( irRRequest.response, function(buffer) {
-      filter2.buffer = buffer;
-      // reverbEffect.buffer = buffer;
-    } );
-}
-irRRequest.send();
-
-reverbEffect.buffer = filter2.buffer;
 
 // Distortion init
 var distortionEffect = context.createWaveShaper();
@@ -92,14 +79,14 @@ var STATE = {
   osc2Gain: 0.4,
   osc2Type: 'sawtooth',
   osc2Detune: 0.01,
-  volume: 0.5,
   LPcutoff : 4000,
   LPreso: 0.0001,
   HPcutoff : 0,
   HPreso: 0.0001,
-  delayAmnt: 0.5,
+  delayAmnt: 0.0,
   delayFeedback: 0,
-  feedbackFilter: 1000
+  feedbackFilter: 1000,
+  volume: 0.5
 }
 
 // Initial State
@@ -130,11 +117,6 @@ function changeOsc2Type(osc2Type){
   STATE.osc2Type = osc2Type;
 }
 
-// Function to alter Master Volume
-function changeMasterVolume(volume){
-  STATE.volume = volume;
-}
-
 function changeLPcutoff(LPcutoff){
   STATE.LPcutoff = LPcutoff;
 }
@@ -158,6 +140,12 @@ function changeDelayTime(delayAmnt){
 function changeDelayFeedback(feedback){
   STATE.delayFeedback = delayFeedback;
 }
+
+// Function to alter Master Volume
+function changeMasterVolume(volume){
+  STATE.volume = volume;
+}
+
 
 // OSC 1 LISTENERS
 
@@ -188,7 +176,6 @@ var osc2Type = document.getElementById("Osc2Type");
 osc2Type.addEventListener("input", function(){
   STATE.osc2Type = this.value;
 })
-var octave = 0;
 
 var octaveUp = document.getElementById("octUp");
 octaveUp.addEventListener("click", function(){
@@ -423,9 +410,14 @@ function setEffects(mouseX, mouseY, effectType){
     delayFeedback.gain.value = (DelayFeedback/100 * 1.0);
   } else {
     // Divide by width of canvas and multiply to get percentage out of 100
-    var DistortionX = ((mouseX/240) * 100);
-    var DistortionY = (100 - (mouseY/240) * 100);
-    distortionEffect.curve = makeDistortionCurve(DistortionX);
+    var DistortionX = (mouseX/240 * 100);
+    var FilterY = (100 - (mouseY/240) * 100);
+    // Our filters complete range is 22050
+    filter3.frequency.value = (FilterY/100)*(22050*0.2);
+    filter3.Q.value = FilterY/100;
+    console.log(filter3.frequency.value);
+    // console.log(filter3.Q.value);
+    distortionEffect.curve = makeDistortionCurve(DistortionX * 4);
     distortionEffect.oversample = '4x';
   }
 }
@@ -481,7 +473,7 @@ function createSingleOscillator(i, type, frequency, detune){
   oscillators[oscillator_id].type = type;
   oscillators[oscillator_id].frequency.value = frequency;
   oscillators[oscillator_id].detune.value = detune;
-  oscillators[oscillator_id].start(context.currentTime);
+  oscillators[oscillator_id].start(0);
   oscillators[oscillator_id].connect(osc1Gain);
 }
 
@@ -521,7 +513,8 @@ keyboard.keyDown = function (note, frequency) {
     delayFeedback.connect(delayEffect);
     delayFeedback.connect(feedbackFilter);
     feedbackFilter.connect(analyser);
-    filter2.connect(distortionEffect);
+    filter2.connect(filter3);
+    filter3.connect(distortionEffect);
     distortionEffect.connect(analyser)
     analyser.connect(masterGain);
     masterGain.connect(context.destination);
@@ -534,9 +527,9 @@ keyboard.keyUp = function (note, frequency) {
   // Only after successfully stopping all oscillators can we reset i
   i = 0;
   // Visuals get very very very choppy if we leave requestAnimationFrame running
-  // cancel requestAnimationFrame after 2 seconds
-  var delayTime = 1000 + delayEffect.delayTime.value*100
-  console.log(delayTime)
+  // cancel requestAnimationFrame after 2sec
+  // Also take into account any delay effects
+  var delayTime = delayEffect.delayTime.value * 2 * 60 * 60
   setTimeout(function(){
     cancelAnimationFrame(window.Animation)
   }, 1000 + delayTime)
