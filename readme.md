@@ -24,4 +24,5 @@ This is a little synthesizer with:
 The project is bundled using webpack, so to get started run
 
 `npm install`
+
 `webpack-dev-server --progress --colors`
