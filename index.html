@@ -109,30 +109,15 @@
             </div>
           </div>
           <!-- Mixer -->
-          <div class="col-lg-3">
-            <h3>Mixer</h3>
-            <label for="attack">Attack</label>
-            <input id="attack" type="range" min="0" max="1.00" step="0.1" value="0.5" orient="vertical">
-
-            <label for="Release">Release</label>
-            <input id="release" type="range" min="0" max="1.00" step="0.1" value="0.5" orient="vertical">
-            <!-- TODO FIX OUTPUT -->
-
-            <label for="MasterFader">Master Volume</label>
-            <input id="volume" type="range" min="0" max="1.00" step="0.1" value="0.5" orient="vertical">
+          <div class="col-lg-3 mixer">
+            <input id="volume" type="range" min="0" max="1.00" step="0.01" value="0.5" orient="vertical">
+            <label>Master Volume</label>
           </div>
         </div>
-      </div>
-    </div>
-
-      <div class="col-lg-12 bottom-row">
         <div class="row">
-
+          <div class="col-lg-12 keyboard" id="keyboard-container">
+            <div id="keyboard"></div>
         </div>
-      </div>
-      <div class="col-lg-12 keyboard" id="keyboard-container">
-        <br>
-        <div id="keyboard"></div>
       </div>
     </div>
   </div>

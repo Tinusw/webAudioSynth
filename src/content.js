@@ -1,27 +1,10 @@
 import {renderChart} from "./spectrum"
 var QwertyHancock = require("./kwerty.js")
 
-// Todo
-// figure this out so we can dynamically set the keyboard width
-var keyboardDiv = document.getElementById("keyboard-container");
-var keyboardWidth = keyboardDiv.clientWidth;
-
-var keyboard = new QwertyHancock({
-  id: 'keyboard',
-  width: keyboardWidth-110,
-  height: 150,
-  startNote: 'A2',
-  whiteNotesColour: '#fff',
-  blackNotesColour: '#000',
-  borderColour: '#000',
-  activeColour: 'orange',
-  octaves: 3
-});
-
 // Browser Compatibility
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
 
-var context = new AudioContext(),keyboard;
+var context = new AudioContext();
 var osc1Gain = context.createGain();
 var osc2Gain = context.createGain();
 var envelope = context.createGain();
@@ -414,9 +397,7 @@ function setEffects(mouseX, mouseY, effectType){
     var FilterY = (100 - (mouseY/240) * 100);
     // Our filters complete range is 22050, we add random cause why not
     filter3.frequency.value = ((FilterY/100)*((22050*0.2)) * generateRandomNumber(0.1, 1.7));
-    console.log(filter3.frequency.value);
     filter3.Q.value = FilterY/100;
-    // console.log(filter3.Q.value);
     distortionEffect.curve = makeDistortionCurve(DistortionX * 4);
     distortionEffect.oversample = '4x';
   }
@@ -496,9 +477,28 @@ function stopOscillators(){
   };
 }
 
+window.addEventListener("load", windowLoadHandler, false);
 
-// Keydown Event
-keyboard.keyDown = function (note, frequency) {
+function windowLoadHandler() {
+  var keyboardWidth = document.getElementById('keyboard-container').offsetWidth;
+  var keyboard = new QwertyHancock({
+    id: 'keyboard',
+    width: keyboardWidth,
+    height: 150,
+    startNote: 'A2',
+    whiteNotesColour: '#fff',
+    blackNotesColour: '#000',
+    borderColour: '#000',
+    activeColour: 'orange',
+    octaves: 3
+  });
+
+  keyboard;
+	canvasApp('delayPad', 'delay');
+  canvasApp('reverbPad', 'reverb');
+
+  // Keydown Event
+  keyboard.keyDown = function (note, frequency) {
     // create our two oscilators
     createOscillatorInObject(STATE.osc1Type, frequency);
     // TODO SORT OUT OSC2 DETUNE
@@ -515,31 +515,25 @@ keyboard.keyDown = function (note, frequency) {
     feedbackFilter.connect(analyser);
     filter2.connect(filter3);
     filter3.connect(distortionEffect);
-    distortionEffect.connect(analyser)
-    analyser.connect(masterGain);
-    masterGain.connect(context.destination);
+    distortionEffect.connect(masterGain);
+    masterGain.connect(analyser);
+    analyser.connect(context.destination);
     renderChart();
-};
+  };
 
-// KeyUp or stop note event
-keyboard.keyUp = function (note, frequency) {
-  stopOscillators();
-  // Only after successfully stopping all oscillators can we reset i
-  i = 0;
-  // Visuals get very very very choppy if we leave requestAnimationFrame running
-  // cancel requestAnimationFrame after 2sec
-  // Also take into account any delay effects
-  var delayTime = delayEffect.delayTime.value * 2 * 60 * 60
-  setTimeout(function(){
-    cancelAnimationFrame(window.Animation)
-  }, 1000 + delayTime)
-};
-
-window.addEventListener("load", windowLoadHandler, false);
-
-function windowLoadHandler() {
-	canvasApp('delayPad', 'delay');
-  canvasApp('reverbPad', 'reverb');
+  // KeyUp or stop note event
+  keyboard.keyUp = function (note, frequency) {
+    stopOscillators();
+    // Only after successfully stopping all oscillators can we reset i
+    i = 0;
+    // Visuals get very very very choppy if we leave requestAnimationFrame running
+    // cancel requestAnimationFrame after 2sec
+    // Also take into account any delay effects
+    var delayTime = delayEffect.delayTime.value * 2 * 60 * 60
+    setTimeout(function(){
+      cancelAnimationFrame(window.Animation)
+    }, 1000 + delayTime)
+  };
 }
 
 export {analyser}
