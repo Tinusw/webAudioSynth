@@ -1,3 +1,4 @@
+$background: #F68657;
 $base-grey: #e1eef6;
 $low-orange: #ff5f2e;
 $mid-yellow: #fcbe32;
@@ -5,7 +6,6 @@ $high-blue: #004e66;
 
 // Input elements
 body {
-  background-color: $base-grey;
   overflow: hidden;
   font: 12px 'Syncopate', sans-serif;
   color: $high-blue;
@@ -23,10 +23,21 @@ input[type=range][orient=vertical]{
   width: 10%;
   margin-left: 50%;
 }
+.vertial-center {
+  min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
+  min-height: 100vh; /* These two lines are counted as one :-)       */
+  display: flex;
+  align-items: center;
+}
 
 // HTML elements
+.jumbotron {
+  background-color: $background;
+}
 .container-fluid{
   width: 80%;
+  padding: 2% 2% 2% 2%;
+  background-color: $base-grey;
   .top-row{
     .dropdown-osc{
       margin-bottom: 5px;
@@ -59,6 +70,11 @@ input[type=range][orient=vertical]{
       }
       .inactive {
         background-color: $low-orange;
+      }
+    }
+    .filter{
+      input {
+        height: 43%;
       }
     }
   }

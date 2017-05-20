@@ -34,6 +34,19 @@ function findAndSetButtons(){
   }
 }
 
+// Get the height of closest bootstrap element
+// Steal height and apply it to the div that will contain our SVG
+function setDivHeight(){
+  var height = document.getElementById('filter').offsetHeight;
+  var spectrum = document.getElementById('spectrum-analyser')
+  height = height + 'px';
+  spectrum.style.height= height;
+}
+
+
 document.addEventListener("DOMContentLoaded", function(event) {
   findAndSetButtons()
 });
+
+// export function renderChart;
+export {setDivHeight}

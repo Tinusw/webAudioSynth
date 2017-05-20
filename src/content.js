@@ -1,4 +1,4 @@
-import {renderChart} from "./visuals"
+import {renderChart} from "./spectrum"
 var QwertyHancock = require("./kwerty.js")
 
 // Todo
@@ -83,13 +83,6 @@ function makeDistortionCurve(amount) {
 
 distortionEffect.curve = makeDistortionCurve(0);
 distortionEffect.oversample = '4x';
-
-
-
-
-
-
-
 
 // State that will save global variables and levels
 var STATE = {
@@ -540,6 +533,7 @@ keyboard.keyUp = function (note, frequency) {
   stopOscillators();
   // Only after successfully stopping all oscillators can we reset i
   i = 0;
+  // visuals
 };
 
 window.addEventListener("load", windowLoadHandler, false);
@@ -548,6 +542,5 @@ function windowLoadHandler() {
 	canvasApp('delayPad', 'delay');
   canvasApp('reverbPad', 'reverb');
 }
-
 
 export {analyser}
