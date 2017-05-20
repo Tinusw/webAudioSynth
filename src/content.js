@@ -389,8 +389,8 @@ function setEffects(mouseX, mouseY, effectType){
     delayEffect.delayTime.value = DelayTime/100 * 2.0;
     // Invert returned value to get percentage out of 100
     var DelayFeedback = (100 - (mouseY/240) * 100);
-    // set delay feedback gain as portion of random number
-    delayFeedback.gain.value = (DelayFeedback/100 * 1.0);
+    // set delay feedback gain as portion of a random number
+    delayFeedback.gain.value = (DelayFeedback/100 * 0.9);
   } else {
     // Divide by width of canvas and multiply to get percentage out of 100
     var DistortionX = (mouseX/240 * 100);
@@ -512,7 +512,7 @@ function windowLoadHandler() {
     delayEffect.connect(delayFeedback);
     delayFeedback.connect(delayEffect);
     delayFeedback.connect(feedbackFilter);
-    feedbackFilter.connect(analyser);
+    feedbackFilter.connect(masterGain);
     filter2.connect(filter3);
     filter3.connect(distortionEffect);
     distortionEffect.connect(masterGain);
@@ -529,8 +529,10 @@ function windowLoadHandler() {
     // Visuals get very very very choppy if we leave requestAnimationFrame running
     // cancel requestAnimationFrame after 2sec
     // Also take into account any delay effects
-    var delayTime = delayEffect.delayTime.value * 2 * 60 * 60
+    // Todo this needs to be refined
+    var delayTime = (delayEffect.delayTime.value * 2 * 60 * 60) * (delayFeedback.gain.value * 5.2)
     setTimeout(function(){
+      console.log('stopped')
       cancelAnimationFrame(window.Animation)
     }, 1000 + delayTime)
   };

@@ -14,12 +14,12 @@ body {
 
 h3 {
   font-size: 18px;
-  margin-top: 5px;
+  margin-top: 2%;
 }
 
 input[type=range][orient=vertical]{
   -webkit-appearance: slider-vertical;
-  height: 175px;
+  height: 28%;
   width: 10%;
   margin-left: 50%;
 }
@@ -80,10 +80,10 @@ input[type=range][orient=vertical]{
   }
   .bottom-row{
     .mixer{
-      margin-top: 35px;
+      margin-top: 3%;
       input{
         margin-left: 25px;
-        height: 220px;
+        height: 36%;
       }
     }
   }
