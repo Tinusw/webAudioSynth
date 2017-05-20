@@ -19,7 +19,7 @@ h3 {
 
 input[type=range][orient=vertical]{
   -webkit-appearance: slider-vertical;
-  height: 35%;
+  height: 175px;
   width: 10%;
   margin-left: 50%;
 }
@@ -74,7 +74,7 @@ input[type=range][orient=vertical]{
     }
     .filter{
       input {
-        height: 43%;
+        height: 200px;
       }
     }
   }

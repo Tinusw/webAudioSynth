@@ -415,11 +415,11 @@ function setEffects(mouseX, mouseY, effectType){
   if (effectType == 'delay'){
     // Divide by width of canvas and multiply to get percentage out of 100
     var DelayTime = 100 - ((mouseX/240) * 100);
-    // Invert returned value to get percentage out of 100
-    var DelayFeedback = (100 - (mouseY/240) * 100);
     // Set as portion of 2 seconds
     delayEffect.delayTime.value = DelayTime/100 * 2.0;
-    // set delay feedback gain as value of random number
+    // Invert returned value to get percentage out of 100
+    var DelayFeedback = (100 - (mouseY/240) * 100);
+    // set delay feedback gain as portion of random number
     delayFeedback.gain.value = (DelayFeedback/100 * 1.0);
   } else {
     // Divide by width of canvas and multiply to get percentage out of 100
@@ -533,7 +533,13 @@ keyboard.keyUp = function (note, frequency) {
   stopOscillators();
   // Only after successfully stopping all oscillators can we reset i
   i = 0;
-  // visuals
+  // Visuals get very very very choppy if we leave requestAnimationFrame running
+  // cancel requestAnimationFrame after 2 seconds
+  var delayTime = 1000 + delayEffect.delayTime.value*100
+  console.log(delayTime)
+  setTimeout(function(){
+    cancelAnimationFrame(window.Animation)
+  }, 1000 + delayTime)
 };
 
 window.addEventListener("load", windowLoadHandler, false);

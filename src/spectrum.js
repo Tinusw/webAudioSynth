@@ -3,7 +3,6 @@ import { analyser } from "./content.js"
 import {setDivHeight} from "./utilities.js"
 // visuals
 var frequencyData = new Uint8Array(255);
-
 // append an svg element with the correct size
 function createSVG(parent, height, width){
   return d3.select(parent)
@@ -14,20 +13,20 @@ function createSVG(parent, height, width){
 }
 
 function throttle (callback, limit) {
-    var wait = false;                 // Initially, we're not waiting
-    return function () {              // We return a throttled function
-        if (!wait) {                  // If we're not waiting
-            callback.call();          // Execute users function
-            wait = true;              // Prevent future invocations
-            setTimeout(function () {  // After a period of time
-                wait = false;         // And allow future invocations
+    var wait = false;
+    return function () {
+        if (!wait) {
+            callback.call();
+            wait = true;
+            setTimeout(function () {
+                wait = false;
             }, limit);
         }
     }
 }
 
 function throlledFun(){
-  requestAnimationFrame(renderChart);
+  window.Animation = window.requestAnimationFrame(renderChart);
   // copy freq data to freqData array
   analyser.getByteFrequencyData(frequencyData);
 }
@@ -55,19 +54,18 @@ document.addEventListener("DOMContentLoaded", function(event) {
   setDivHeight()
   var width = document.getElementById('spectrum-analyser').offsetWidth;
   var height = document.getElementById('spectrum-analyser').offsetHeight;
-  var svg = createSVG('#canvas', width, height);
+  var svg = createSVG('#canvas', height, width);
   // Create our intial chart
   svg.selectAll('rect')
     .data(frequencyData)
     .enter().append('rect')
     .attr('transform', '')
-    .transition().duration(300)
+    .transition().duration(100)
     .attr('x', function(d, i){
       return i * (width / frequencyData.length);
     })
   .attr('width', width / frequencyData.length);
 });
-
 
 // export function renderChart;
 export {renderChart}
