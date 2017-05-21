@@ -77,9 +77,6 @@ input[type=range][orient=vertical]{
         height: 25%;
       }
     }
-    .svg-background{
-      background-color: $mid-yellow;
-    }
   }
   .bottom-row{
     #delay{
@@ -111,6 +108,10 @@ input[type=range][orient=vertical]{
         left: 0;
       }
     }
+  }
+  .svg-background{
+    background-color: #566270;
+    border-radius: 2px;
   }
   .keyboard{
     padding-top: 2%;

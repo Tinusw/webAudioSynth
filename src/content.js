@@ -280,7 +280,7 @@ function canvasApp(canvasID, effectType) {
 		var tempColor;
     var tempShape;
 		for (i=0; i < numShapes; i++) {
-      // My canvas element is 240x240
+      // Canvas size inherits from theCanvas object
 			tempRad = 10;
 			tempX = 0 + tempRad;
 			tempY = theCanvas.height - tempRad;
@@ -393,7 +393,7 @@ function canvasApp(canvasID, effectType) {
 	}
 
 	function drawScreen() {
-		context.fillStyle = "#000000";
+		context.fillStyle = "#566270";
 		context.fillRect(0,0,container.offsetWidth,container.offsetHeight);
 		drawShapes();
 	}
