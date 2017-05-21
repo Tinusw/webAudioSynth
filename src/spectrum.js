@@ -8,7 +8,7 @@ function createSVG(parent, height, width){
   return d3.select(parent)
     .append('svg')
     .attr('height', height)
-    .attr('width', width + 2)
+    .attr('width', width-10)
     .attr('id', 'canvas')
     .attr('class', 'svg-background')
 }

@@ -33,6 +33,7 @@ input[type=range][orient=vertical]{
 // HTML elements
 .jumbotron {
   background-color: $background;
+  padding-top: 0;
 }
 .container-fluid{
   width: 80%;
