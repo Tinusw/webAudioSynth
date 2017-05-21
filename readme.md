@@ -26,3 +26,5 @@ The project is bundled using webpack, so to get started run
 `npm install`
 
 `webpack-dev-server --progress --colors`
+
+then check out `localhost:8080`

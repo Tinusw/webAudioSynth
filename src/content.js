@@ -14,7 +14,8 @@ var nodes = [];
 var oscillators = {};
 
 // Initialize octave to 0
-var octave = 0;
+var osc1octave = 0;
+var osc2octave = 0;
 
 // init LP and HP filters
 var filter = context.createBiquadFilter();
@@ -145,6 +146,22 @@ osc1Type.addEventListener("input", function(){
   STATE.osc1Type = this.value;
 })
 
+var osc1octaveUp = document.getElementById("octUp1");
+osc1octaveUp.addEventListener("click", function(){
+  // If an octave up we simply multiply existing frequency
+  osc1octave = 1;
+})
+
+var osc1octaveNormal = document.getElementById("octNormal1");
+osc1octaveNormal.addEventListener("click", function(){
+  osc1octave = 0;
+})
+
+var osc1octaveDown = document.getElementById("octDown1");
+osc1octaveDown.addEventListener("click", function(){
+  osc1octave = -1;
+})
+
 // OSC 2 LISTENERS
 
 var osc2Volume = document.getElementById("Osc2Gain")
@@ -160,20 +177,20 @@ osc2Type.addEventListener("input", function(){
   STATE.osc2Type = this.value;
 })
 
-var octaveUp = document.getElementById("octUp");
-octaveUp.addEventListener("click", function(){
+var osc2octaveUp = document.getElementById("octUp2");
+osc2octaveUp.addEventListener("click", function(){
   // If an octave up we simply multiply existing frequency
-  octave = 1;
+  osc2octave = 1;
 })
 
-var octaveNormal = document.getElementById("octNormal");
-octaveNormal.addEventListener("click", function(){
-  octave = 0;
+var osc2octaveNormal = document.getElementById("octNormal2");
+osc2octaveNormal.addEventListener("click", function(){
+  osc2octave = 0;
 })
 
-var octaveDown = document.getElementById("octDown");
-octaveDown.addEventListener("click", function(){
-  octave = -1;
+var osc2octaveDown = document.getElementById("octDown2");
+osc2octaveDown.addEventListener("click", function(){
+  osc2octave = -1;
 })
 
 // Listener for MasterVolume
@@ -226,7 +243,10 @@ HPreso.addEventListener("input", function(){
 function canvasApp(canvasID, effectType) {
 	var theCanvas = document.getElementById(canvasID);
 	var context = theCanvas.getContext("2d");
-
+  var container = document.getElementById(effectType);
+  // Set height and width of canvas object
+  theCanvas.width = container.offsetWidth-10;
+  theCanvas.height = container.offsetHeight-10;
 	init();
 
 	var numShapes;
@@ -263,7 +283,7 @@ function canvasApp(canvasID, effectType) {
       // My canvas element is 240x240
 			tempRad = 10;
 			tempX = 0 + tempRad;
-			tempY = 240 - tempRad;
+			tempY = theCanvas.height - tempRad;
 			tempR = Math.floor(Math.random()*255);
 			tempG = Math.floor(Math.random()*255);
 			tempB = Math.floor(Math.random()*255);
@@ -374,8 +394,7 @@ function canvasApp(canvasID, effectType) {
 
 	function drawScreen() {
 		context.fillStyle = "#000000";
-		context.fillRect(0,0,theCanvas.width,theCanvas.height);
-
+		context.fillRect(0,0,container.offsetWidth,container.offsetHeight);
 		drawShapes();
 	}
 }
@@ -384,7 +403,7 @@ function canvasApp(canvasID, effectType) {
 function setEffects(mouseX, mouseY, effectType){
   if (effectType == 'delay'){
     // Divide by width of canvas and multiply to get percentage out of 100
-    var DelayTime = 100 - ((mouseX/240) * 100);
+    var DelayTime = 100 - ((mouseX/delayPad.offsetWidth) * 100);
     // Set as portion of 2 seconds
     delayEffect.delayTime.value = DelayTime/100 * 2.0;
     // Invert returned value to get percentage out of 100
@@ -404,7 +423,7 @@ function setEffects(mouseX, mouseY, effectType){
 }
 // ********************************************
 
-function checkOsc2frequency(octave, frequency){
+function checkOscfrequency(octave, frequency){
   if (octave >= 1){
     return frequency = frequency * 2;
   } else if (octave < 0){
@@ -429,6 +448,7 @@ function generateRandomNumber(min, max){
 // We're using to oscillator objects to diffirentiate between OSC 1 & 2
 function createOscillatorInObject(type, frequency){
   var oscillator_id = "oscillator" + i;
+  frequency = checkOscfrequency(osc1octave, frequency)
   if(oscillators.hasOwnProperty(oscillator_id)){
     i = i + 1;
     createSingleOscillator(i, type, frequency, (i * generateRandomNumber(0.4, 0.9)));
@@ -439,7 +459,7 @@ function createOscillatorInObject(type, frequency){
 
 function createOscillator2InObject(type, frequency){
   var oscillator_id = "oscillator_2" + i;
-  frequency = checkOsc2frequency(octave, frequency)
+  frequency = checkOscfrequency(osc2octave, frequency)
   if(oscillators.hasOwnProperty(oscillator_id)){
     i = i + 1;
     createSingleOscillator2(i, type, frequency, (i * generateRandomNumber(0.4, 0.9)));
@@ -495,7 +515,7 @@ function windowLoadHandler() {
 
   keyboard;
 	canvasApp('delayPad', 'delay');
-  canvasApp('reverbPad', 'reverb');
+  canvasApp('distortionPad', 'distortion');
 
   // Keydown Event
   keyboard.keyDown = function (note, frequency) {
@@ -532,7 +552,6 @@ function windowLoadHandler() {
     // Todo this needs to be refined
     var delayTime = (delayEffect.delayTime.value * 2 * 60 * 60) * (delayFeedback.gain.value * 5.2)
     setTimeout(function(){
-      console.log('stopped')
       cancelAnimationFrame(window.Animation)
     }, 1000 + delayTime)
   };

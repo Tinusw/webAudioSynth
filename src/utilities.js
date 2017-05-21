@@ -6,8 +6,8 @@ function setColor(e) {
 }
 
 // Toggle buttons that aren't clicked to inactive
-function checkColors(){
-  var buttons = document.getElementsByClassName('btn');
+function checkColors(arg){
+  var buttons = document.getElementsByClassName(arg);
   for(var i = 0; i < buttons.length; i++) {
     if (buttons[i].classList.contains('active')) {
       setColor(buttons[i]);
@@ -17,11 +17,11 @@ function checkColors(){
 
 // cycle through our octave buttons and add event listeners
 // add hooks to color toggler
-function findAndSetButtons(){
-  var buttons = document.getElementsByClassName('btn');
+function findAndSetButtons(arg){
+  var buttons = document.getElementsByClassName(arg);
   for(var i = 0; i < buttons.length; i++) {
     buttons[i].addEventListener("click", function(e){
-      checkColors()
+      checkColors(arg)
       e = e || window.event;
       var target = e.target || e.srcElement
       var text = target.textContent || text.innerText;
@@ -45,7 +45,8 @@ function setDivHeight(){
 
 
 document.addEventListener("DOMContentLoaded", function(event) {
-  findAndSetButtons()
+  findAndSetButtons('switch1')
+  findAndSetButtons('switch2')
 });
 
 // export function renderChart;

@@ -24,9 +24,17 @@
                 <input id="Osc1Gain" type="range" min="0" max="1" step="0.01" value="0.5" orient="vertical"/>
                 <label>Volume</label>
               </div>
-              <div class="col-lg-2 text-center osc-input">
-                <input id="Osc1Release" type="range" min="0" max="1" step="0.01" value="0.5" orient="vertical"/>
-                <label>Release</label>
+              <div class="col-lg-4 text-center octave-switch">
+                <button class="btn btn-md inactive switch1" id="octUp1">
+                  <label class="label">1</label>
+                </button>
+                <button class="btn btn-md active switch1" id="octNormal1">
+                  <label class="label">0</label>
+                </button>
+                <button class="btn btn-md inactive switch1" id="octDown1" >
+                  <label class="label">1</label>
+                </button>
+                <label class="subtitle">Octave</label>
               </div>
             </div>
           </div>
@@ -44,18 +52,14 @@
                 <input id="Osc2Gain" type="range" min="0" max="1" step="0.01" value="0.5" orient="vertical"/>
                 <label>Volume</label>
               </div>
-              <div class="col-lg-2 text-center osc-input">
-                <input id="Osc2Release" type="range" min="0" max="1" step="0.01" value="0.5" orient="vertical"/>
-                <label>Release</label>
-              </div>
               <div class="col-lg-4 text-center octave-switch">
-                <button class="btn btn-md inactive" id="octUp">
+                <button class="btn btn-md inactive switch2" id="octUp2">
                   <label class="label">1</label>
                 </button>
-                <button class="btn btn-md active" id="octNormal">
+                <button class="btn btn-md active switch2" id="octNormal2">
                   <label class="label">0</label>
                 </button>
-                <button class="btn btn-md inactive" id="octDown" >
+                <button class="btn btn-md inactive switch2" id="octDown2" >
                   <label class="label">1</label>
                 </button>
                 <label class="subtitle">Octave</label>
@@ -94,8 +98,8 @@
           <div class="col-lg-3 text-left">
             <h3>Delay</h3>
             <div class="row">
-              <div class="col-lg-12">
-                <canvas id="delayPad" width="240" height="240"></canvas>
+              <div class="col-lg-12" id="delay">
+                <canvas id="delayPad"></canvas>
               </div>
             </div>
           </div>
@@ -103,15 +107,19 @@
           <div class="col-lg-3 text-left">
             <h3>Distortion</h3>
             <div class="row">
-              <div class="col-lg-12">
-                <canvas id="reverbPad" width="240" height="240"></canvas>
+              <div class="col-lg-12" id="distortion">
+                <canvas id="distortionPad"></canvas>
               </div>
             </div>
           </div>
           <!-- Mixer -->
-          <div class="col-lg-3 mixer">
+          <div class="col-lg-2 mixer">
             <input id="volume" type="range" min="0" max="1.00" step="0.01" value="0.5" orient="vertical">
             <label>Master Volume</label>
+          </div>
+          <div class="col-lg-3 description text-center">
+            <h3> Made by Tinus Wagner </h3>
+            <a href="https://github.com/Tinusw/webAudioSynth" target="_blank" class="github"></a>
           </div>
         </div>
         <div class="row">
