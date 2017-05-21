@@ -1,8 +1,9 @@
 import * as d3 from "d3";
 import { analyser } from "./content.js"
-import {setDivHeight} from "./utilities.js"
-// visuals
+import { setDivHeight } from "./utilities.js"
+
 var frequencyData = new Uint8Array(255);
+
 // append an svg element with the correct size
 function createSVG(parent, height, width){
   return d3.select(parent)
@@ -52,10 +53,14 @@ function renderChart() {
 }
 
 document.addEventListener("DOMContentLoaded", function(event) {
+  // We set the heights of a few divs depending on screenheight
   setDivHeight()
+
+  // Then we use these new measurements to set our SVG sizes.
   var width = document.getElementById('spectrum-analyser').offsetWidth;
   var height = document.getElementById('spectrum-analyser').offsetHeight;
   var svg = createSVG('#canvas', height, width);
+
   // Create our intial chart
   svg.selectAll('rect')
     .data(frequencyData)

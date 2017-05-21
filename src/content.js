@@ -1,4 +1,4 @@
-import {renderChart} from "./spectrum"
+import { renderChart } from "./spectrum"
 var QwertyHancock = require("./kwerty.js")
 
 // Browser Compatibility
@@ -371,7 +371,6 @@ function canvasApp(canvasID, effectType) {
 	}
 
 	function hitTest(shape,mx,my) {
-
 		var dx;
 		var dy;
 		dx = mx - shape.x;
@@ -421,7 +420,6 @@ function setEffects(mouseX, mouseY, effectType){
     distortionEffect.oversample = '4x';
   }
 }
-// ********************************************
 
 function checkOscfrequency(octave, frequency){
   if (octave >= 1){
@@ -432,6 +430,7 @@ function checkOscfrequency(octave, frequency){
     return frequency;
   }
 }
+
 // We're using this to uniquely identify oscillators
 // This is used by createOscillatorInObject
 // This is used by createSingleOscillator
@@ -557,4 +556,4 @@ function windowLoadHandler() {
   };
 }
 
-export {analyser}
+export { analyser }

@@ -50,4 +50,4 @@ document.addEventListener("DOMContentLoaded", function(event) {
 });
 
 // export function renderChart;
-export {setDivHeight}
+export { setDivHeight }
