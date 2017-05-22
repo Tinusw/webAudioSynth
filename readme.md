@@ -1,4 +1,5 @@
 ## Web Synth with Webpack, D3.js & the Web Audio API
+[![License: CC BY 4.0](https://licensebuttons.net/l/by/4.0/80x15.png)](http://creativecommons.org/licenses/by/4.0/)
 
 [See it live](https://mysterious-ravine-13417.herokuapp.com/)
 
