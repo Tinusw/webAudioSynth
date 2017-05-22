@@ -1,4 +1,4 @@
-## Web Synth with Webpack and D3.js
+## Web Synth with Webpack, D3.js & the Web Audio API
 
 This is a little synthesizer with:
 - Polyphonic playable keyboard
@@ -18,6 +18,7 @@ This is a little synthesizer with:
     - X axis controls the distortion curve
     - Y axis is in progress.
 - A spectrum analyser that will give real-time output.
+- It also has a mini tutorial built using [bootstrap-tour](http://bootstraptour.com/api/).
 
 ## Setting the project up & running it.
 
