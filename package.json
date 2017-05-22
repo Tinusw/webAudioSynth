@@ -7,8 +7,7 @@
     "bootstrap": "^3.3.7",
     "expose-loader": "^0.7.3",
     "jquery": "^3.2.1",
-    "lodash": "^4.17.4",
-    "harp": "*"
+    "lodash": "^4.17.4"
   },
   "devDependencies": {
     "bootstrap-sass": "^3.3.7",
@@ -24,7 +23,7 @@
   },
   "scripts": {
     "test": "test",
-    "heroku-postbuild": "webpack -p --config ./webpack.prod.config.js --progress"
+    "postinstall": "npm install express"
   },
   "author": "Tinus Wagner",
   "license": "ISC"
