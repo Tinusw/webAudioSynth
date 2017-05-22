@@ -6,10 +6,11 @@
   "dependencies": {
     "bootstrap": "^3.3.7",
     "expose-loader": "^0.7.3",
+    "express": "^4.15.3",
     "jquery": "^3.2.1",
     "lodash": "^4.17.4"
   },
-  "devDependencies": {
+  "dependencies": {
     "bootstrap-sass": "^3.3.7",
     "css-loader": "^0.28.0",
     "file-loader": "^0.11.1",
@@ -22,7 +23,9 @@
     "webpack": "^2.4.1"
   },
   "scripts": {
-    "test": "test"
+    "build": "webpack -p --progress",
+    "dev": "webpack-dev-server --progress --colors",
+    "start": "./node_modules/webpack/bin/webpack.js -p --progress && node server.js"
   },
   "author": "Tinus Wagner",
   "license": "ISC"

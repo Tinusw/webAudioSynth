@@ -26,6 +26,9 @@ The project is bundled using webpack, so to get started run
 
 `npm install`
 
-`webpack-dev-server --progress --colors`
+To run it locally(using webpack-dev-server):
+`npm dev`
 
+To run on production(using express):
+`npm start`
 then check out `localhost:8080`
