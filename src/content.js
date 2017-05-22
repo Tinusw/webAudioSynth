@@ -416,7 +416,7 @@ function setEffects(mouseX, mouseY, effectType){
     // Our filters complete range is 22050, we add random cause why not
     filter3.frequency.value = ((FilterY/100)*((22050*0.2)) * generateRandomNumber(0.1, 1.7));
     filter3.Q.value = FilterY/100;
-    distortionEffect.curve = makeDistortionCurve(DistortionX * 4);
+    distortionEffect.curve = makeDistortionCurve(DistortionX * 2);
     distortionEffect.oversample = '4x';
   }
 }

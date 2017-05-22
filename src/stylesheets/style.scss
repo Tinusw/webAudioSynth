@@ -6,7 +6,6 @@ $high-blue: #004e66;
 
 // Input elements
 body {
-  overflow: hidden;
   font: 12px 'Syncopate', sans-serif;
   color: $high-blue;
   opacity: ease-in 0.2s;
@@ -34,6 +33,7 @@ input[type=range][orient=vertical]{
 .jumbotron {
   background-color: $background;
   padding-top: 0;
+  margin-bottom: 0;
 }
 .container-fluid{
   width: 80%;

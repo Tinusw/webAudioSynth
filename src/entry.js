@@ -3,6 +3,8 @@ import 'jquery';
 import 'bootstrap/dist/js/bootstrap';
 import 'bootstrap/dist/css/bootstrap.css';
 require('bootstrap-loader');
+require('./bootstrap-tour.js');
+require('./stylesheets/bootstrap-tour.css');
 require('./content.js');
 require('./utilities.js');
 require('./stylesheets/style.scss');
