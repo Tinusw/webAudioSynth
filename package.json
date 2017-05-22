@@ -22,7 +22,8 @@
     "webpack": "^2.4.1"
   },
   "scripts": {
-    "test": "test"
+    "test": "test",
+    "heroku-postbuild": "webpack -p --config ./webpack.prod.config.js --progress"
   },
   "author": "Tinus Wagner",
   "license": "ISC"
