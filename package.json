@@ -23,9 +23,9 @@
     "webpack": "^2.4.1"
   },
   "scripts": {
-    "build": "webpack -p --progress",
+    "build": "webpack -p",
     "dev": "webpack-dev-server --progress --colors",
-    "start": "./node_modules/webpack/bin/webpack.js -p --progress && node server.js"
+    "start": "node server.js"
   },
   "author": "Tinus Wagner",
   "license": "ISC"

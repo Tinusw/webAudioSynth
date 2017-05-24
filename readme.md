@@ -33,5 +33,7 @@ To run it locally(using webpack-dev-server):
 `npm dev`
 
 To run on production(using express):
-`npm start`
+- run `npm build` to compile a new version of `bundle.js` with webpack
+- run `npm start` to fire up an express server
+
 then check out `localhost:8080`
